@@ -21,7 +21,8 @@ import ru.jngvarr.authservice.repositories.UserRepository;
 import ru.jngvarr.authservice.services.RefreshTokenService;
 import ru.jngvarr.authservice.services.UserDetailsServiceImpl;
 import ru.jngvarr.authservice.services.UserService;
-import security_config.JwtUtil;
+import security.provider.JwtCandidateAuthenticationProvider;
+import security.provider.JwtUtil;
 
 import java.time.LocalDateTime;
 
@@ -37,7 +38,7 @@ public class UserController {
     private final UserService userService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager authenticationManager;
+    private final JwtCandidateAuthenticationProvider jwtCandidateAuthenticationProvider;
     private final JwtUtil jwtUtil;
     private final RefreshTokenService refreshTokenService;
     private final RefreshTokenRepository tokenRepository;
@@ -61,7 +62,7 @@ public class UserController {
     public AuthenticationResponse createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest,
                                                             HttpServletResponse response) throws Exception {
         try {
-            authenticationManager.authenticate(
+            new AuthenticationManager().authenticate(
                     new UsernamePasswordAuthenticationToken(
                             authenticationRequest.getUsername(),
                             authenticationRequest.getPassword())
