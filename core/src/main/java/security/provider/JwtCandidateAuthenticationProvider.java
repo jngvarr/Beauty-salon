@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -24,6 +23,10 @@ public class JwtCandidateAuthenticationProvider implements AuthenticationProvide
             String jwtString = auth.getJwt();
             // decode JWT. validate JWT.
             // extract:
+            String requestUsername = authentication.getName();
+
+
+
             String userId = "..."; // extract from JWT. validate in database if necessary
             List<String> userRoles = new ArrayList<>(); // extract from JWT
             ArrayList<SimpleGrantedAuthority> authorities = userRoles.stream()

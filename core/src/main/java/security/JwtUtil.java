@@ -1,4 +1,4 @@
-package security.provider;
+package security;
 
 
 import io.jsonwebtoken.Claims;

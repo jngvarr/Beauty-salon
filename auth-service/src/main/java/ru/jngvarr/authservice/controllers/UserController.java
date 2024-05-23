@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,8 +22,8 @@ import ru.jngvarr.authservice.repositories.UserRepository;
 import ru.jngvarr.authservice.services.RefreshTokenService;
 import ru.jngvarr.authservice.services.UserDetailsServiceImpl;
 import ru.jngvarr.authservice.services.UserService;
+import security.JwtUtil;
 import security.provider.JwtCandidateAuthenticationProvider;
-import security.provider.JwtUtil;
 
 import java.time.LocalDateTime;
 
@@ -38,12 +39,13 @@ public class UserController {
     private final UserService userService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtCandidateAuthenticationProvider jwtCandidateAuthenticationProvider;
     private final JwtUtil jwtUtil;
     private final RefreshTokenService refreshTokenService;
     private final RefreshTokenRepository tokenRepository;
+    private final AuthenticationManager authenticationManager;
+    private final AuthenticationProvider authenticationProvider;
 
-//    @GetMapping("/registration")
+    //    @GetMapping("/registration")
 //    public String getUsers() {
 //        return "Привет от users";
 //    }
@@ -51,6 +53,7 @@ public class UserController {
     public User getUserByEmail(@PathVariable String email) {
         return userService.getUserByEmail(email);
     }
+
     @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping("/registration")
     public User userRegistration(@RequestBody User user) {
@@ -62,7 +65,7 @@ public class UserController {
     public AuthenticationResponse createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest,
                                                             HttpServletResponse response) throws Exception {
         try {
-            new AuthenticationManager().authenticate(
+            authenticationProvider.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             authenticationRequest.getUsername(),
                             authenticationRequest.getPassword())
@@ -100,7 +103,6 @@ public class UserController {
         if (refreshTokenEntity == null || refreshTokenEntity.getExpiryDate().isBefore(LocalDateTime.now())) {
             throw new RuntimeException("Invalid or expired refresh token");
         }
-
 
         if (refreshTokenService.validateRefreshToken(refreshToken)) {
             String username = jwtUtil.extractUsername(refreshToken);
