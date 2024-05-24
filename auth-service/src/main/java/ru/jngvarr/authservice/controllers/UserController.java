@@ -8,8 +8,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,11 +17,11 @@ import ru.jngvarr.authservice.dto.AuthenticationRequest;
 import ru.jngvarr.authservice.dto.AuthenticationResponse;
 import ru.jngvarr.authservice.repositories.RefreshTokenRepository;
 import ru.jngvarr.authservice.repositories.UserRepository;
+import ru.jngvarr.authservice.services.CustomAuthenticationProvider;
 import ru.jngvarr.authservice.services.RefreshTokenService;
 import ru.jngvarr.authservice.services.UserDetailsServiceImpl;
 import ru.jngvarr.authservice.services.UserService;
-import security.JwtUtil;
-import security.provider.JwtCandidateAuthenticationProvider;
+import ru.jngvarr.authservice.security.JwtUtil;
 
 import java.time.LocalDateTime;
 
@@ -42,8 +40,8 @@ public class UserController {
     private final JwtUtil jwtUtil;
     private final RefreshTokenService refreshTokenService;
     private final RefreshTokenRepository tokenRepository;
-    private final AuthenticationManager authenticationManager;
-    private final AuthenticationProvider authenticationProvider;
+    //    private final AuthenticationManager authenticationManager;
+    private final CustomAuthenticationProvider authenticationProvider;
 
     //    @GetMapping("/registration")
 //    public String getUsers() {
@@ -64,6 +62,7 @@ public class UserController {
     @PostMapping("/login")
     public AuthenticationResponse createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest,
                                                             HttpServletResponse response) throws Exception {
+
         try {
             authenticationProvider.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -75,10 +74,10 @@ public class UserController {
         }
 
         final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-        final String accessToken = jwtUtil.generateAccessToken(userDetails);
+        final String accessToken = jwtUtil.generateToken(userDetails, true);
 
         // Создание куки для токена обновления
-        final String refreshToken = jwtUtil.generateRefreshToken(userDetails);
+        final String refreshToken = jwtUtil.generateToken(userDetails, false);
 
         // Сохранение refresh token в базе данных
         refreshTokenService.saveRefreshToken(refreshToken);
@@ -107,7 +106,7 @@ public class UserController {
         if (refreshTokenService.validateRefreshToken(refreshToken)) {
             String username = jwtUtil.extractUsername(refreshToken);
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-            String newAccessToken = jwtUtil.generateAccessToken(userDetails);
+            String newAccessToken = jwtUtil.generateToken(userDetails, true);
             return new AuthenticationResponse(newAccessToken);
         } else {
             throw new RuntimeException("Invalid refresh token");

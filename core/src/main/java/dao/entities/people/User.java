@@ -7,6 +7,7 @@ import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -19,7 +20,7 @@ import java.util.List;
 public class User extends SomeOne implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
     @Column(name = "user_name")
     private final String userName;
     @Setter
@@ -50,7 +51,7 @@ public class User extends SomeOne implements UserDetails {
 
     @Override
     public String getUsername() {
-        return null;
+        return userName;
     }
 
     @Override
@@ -72,4 +73,5 @@ public class User extends SomeOne implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }

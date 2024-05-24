@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import ru.jngvarr.authservice.repositories.RefreshTokenRepository;
 import ru.jngvarr.authservice.repositories.UserRepository;
-import security_config.JwtUtil;
+import ru.jngvarr.authservice.security.JwtUtil;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;

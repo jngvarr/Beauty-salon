@@ -15,8 +15,8 @@ import ru.jngvarr.authservice.repositories.UserRepository;
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserRepository userRepository;
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
+    public User loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.getUserByUserName(username);
         if (user == null) {
             throw new UsernameNotFoundException("User not found: " + username);
