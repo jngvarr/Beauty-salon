@@ -39,3 +39,6 @@ logging:
 #        basic-auth:
 #          username: user
 #          password: pass
+jwt:
+  secret: "EFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/M="
+

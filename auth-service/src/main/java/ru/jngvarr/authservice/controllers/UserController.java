@@ -17,6 +17,7 @@ import ru.jngvarr.authservice.dto.AuthenticationRequest;
 import ru.jngvarr.authservice.dto.AuthenticationResponse;
 import ru.jngvarr.authservice.repositories.RefreshTokenRepository;
 import ru.jngvarr.authservice.repositories.UserRepository;
+import ru.jngvarr.authservice.services.AuthService;
 import ru.jngvarr.authservice.services.CustomAuthenticationProvider;
 import ru.jngvarr.authservice.services.RefreshTokenService;
 import ru.jngvarr.authservice.services.UserDetailsServiceImpl;
@@ -35,13 +36,12 @@ import java.time.LocalDateTime;
 public class UserController {
     private final UserDetailsServiceImpl userDetailsService;
     private final UserService userService;
-    private final UserRepository userRepository;
+    //    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final RefreshTokenService refreshTokenService;
     private final RefreshTokenRepository tokenRepository;
-    //    private final AuthenticationManager authenticationManager;
-    private final CustomAuthenticationProvider authenticationProvider;
+    private final AuthService authService;
 
     //    @GetMapping("/registration")
 //    public String getUsers() {
@@ -62,13 +62,8 @@ public class UserController {
     @PostMapping("/login")
     public AuthenticationResponse createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest,
                                                             HttpServletResponse response) throws Exception {
-
         try {
-            authenticationProvider.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            authenticationRequest.getUsername(),
-                            authenticationRequest.getPassword())
-            );
+            authService.authenticate(authenticationRequest);
         } catch (BadCredentialsException e) {
             throw new Exception("Incorrect username or password", e);
         }
@@ -87,7 +82,6 @@ public class UserController {
         refreshTokenCookie.setHttpOnly(true);
         refreshTokenCookie.setSecure(true); // Установка флага secure для HTTPS
         response.addCookie(refreshTokenCookie);
-
         return new AuthenticationResponse(accessToken);
     }
 

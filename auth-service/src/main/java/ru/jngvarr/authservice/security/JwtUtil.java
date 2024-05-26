@@ -1,32 +1,34 @@
 package ru.jngvarr.authservice.security;
 
 
-import dao.entities.people.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
-import ru.jngvarr.authservice.repositories.UserRepository;
 import ru.jngvarr.authservice.services.UserDetailsServiceImpl;
 
 import java.security.Key;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
+@Data
 public class JwtUtil {
     private final UserDetailsServiceImpl userDetailsService;
     private static final long ACCESS_TOKEN_VALIDITY = 1000 * 60 * 60 * 10; // 10 часов
     private static final long REFRESH_TOKEN_VALIDITY = 1000 * 60 * 60 * 24 * 7; // 7 дней
 
+    @Value("${jwt.secret}")
+    private String jwtSecret;
     private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256); // Генерация ключа для HMAC-SHA256
 
     public String generateToken(UserDetails userDetails, boolean tT) {
@@ -38,6 +40,7 @@ public class JwtUtil {
         claims.put("roles", roles);
         return createToken(claims, userDetails.getUsername(), tT ? ACCESS_TOKEN_VALIDITY : REFRESH_TOKEN_VALIDITY);
     }
+
     private Long getUserId(UserDetails userDetails) {
         return userDetailsService.loadUserByUsername(userDetails.getUsername()).getId();
     }
@@ -59,6 +62,10 @@ public class JwtUtil {
 
     public Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
+    }
+
+    public List<String> extractRoles(String token) {
+        return extractClaim(token, claims -> claims.get("roles", List.class));
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {

@@ -1,6 +1,7 @@
 package ru.jngvarr.authservice.config;
 
 import lombok.Data;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,9 +20,10 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import ru.jngvarr.authservice.security.JwtRequestFilter;
-import ru.jngvarr.authservice.services.CustomAuthenticationProvider;
 import ru.jngvarr.authservice.services.UserDetailsServiceImpl;
+import org.springframework.beans.factory.annotation.Value;
 
+import java.security.Key;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +32,7 @@ import java.util.Map;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+
 public class SecurityConfig {
     private final UserDetailsServiceImpl userDetailsService;
     private final JwtRequestFilter jwtRequestFilter;
@@ -74,12 +77,12 @@ public class SecurityConfig {
         return new DelegatingPasswordEncoder(idForEncode, encoders);
     }
 
-    @Bean
-    public AuthenticationManager authenticationManager() {
-        CustomAuthenticationProvider authenticationProvider =
-                new CustomAuthenticationProvider(userDetailsService, passwordEncoder());
-        return new ProviderManager(List.of(authenticationProvider));
-    }
+//    @Bean
+//    public AuthenticationManager authenticationManager() {
+//        CustomAuthenticationProvider authenticationProvider =
+//                new CustomAuthenticationProvider(userDetailsService, passwordEncoder());
+//        return new ProviderManager(List.of(authenticationProvider));
+//    }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
