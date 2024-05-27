@@ -5,6 +5,7 @@ import dao.entities.people.User;
 import feign_clients.StaffFeignClient;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import security.repositories.UserRepository;
@@ -12,6 +13,7 @@ import security.repositories.UserRepository;
 import java.util.List;
 
 @Service
+@Log4j2
 @Data
 @RequiredArgsConstructor
 public class UserService {
@@ -35,6 +37,7 @@ public class UserService {
     }
 
     public List<User> getUsers() {
+        log.debug("getUsers SERVICE");
         return userRepository.findAll();
     }
 

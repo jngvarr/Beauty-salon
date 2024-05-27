@@ -33,7 +33,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:4200")
+//@CrossOrigin(origins = "http://localhost:4200")
 public class UserController {
     private final UserDetailsServiceImpl userDetailsService;
     private final UserService userService;
@@ -43,15 +43,17 @@ public class UserController {
     private final RefreshTokenRepository tokenRepository;
     private final AuthService authService;
 
-
+//    @PreAuthorize("permitAll()")
     @GetMapping("/registration")
     public String getHello() {
         return "Привет от users";
     }
 
-    @PreAuthorize("permitAll()")
     @GetMapping
+//    @PreAuthorize("permitAll()")
+
     public List<User> getUsers() {
+        log.debug("getUsers");
         return userService.getUsers();
     }
 

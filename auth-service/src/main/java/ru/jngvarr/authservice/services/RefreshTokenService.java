@@ -2,6 +2,7 @@ package ru.jngvarr.authservice.services;
 
 import dao.entities.RefreshToken;
 import io.jsonwebtoken.Claims;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
+@Data
 public class RefreshTokenService {
     private final UserRepository userRepository;
     private final RefreshTokenRepository tokenRepository;

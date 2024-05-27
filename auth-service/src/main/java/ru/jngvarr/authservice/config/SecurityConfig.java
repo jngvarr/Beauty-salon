@@ -4,6 +4,8 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -13,8 +15,11 @@ import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import ru.jngvarr.authservice.services.CustomAuthenticationProvider;
+import security.UserDetailsServiceImpl;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Data
@@ -23,14 +28,15 @@ import java.util.Map;
 @RequiredArgsConstructor
 @EnableMethodSecurity
 public class SecurityConfig {
+//    UserDetailsServiceImpl userDetailsService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(AbstractHttpConfigurer::disable)
+//                .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                                .requestMatchers("/users/registration", "/users/login",  "/users").permitAll()
+                                .requestMatchers("/users/registration", "/users/login", "/users").permitAll()
 //                .requestMatchers("/public/**").permitAll()
 //                .requestMatchers("/admin/**").hasRole("ADMIN")
 //                                .anyRequest().authenticated()
@@ -43,26 +49,26 @@ public class SecurityConfig {
                         .permitAll()
                 );
 
-//        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        // Основная схема кодирования паролей
-        String idForEncode = "bcrypt";
-
-        // Настройка SCryptPasswordEncoder с параметрами
-        SCryptPasswordEncoder scryptPasswordEncoder = new SCryptPasswordEncoder(
-                16384, 8, 1, 32, 64);
-        // мапа схем кодирования паролей
-        Map<String, PasswordEncoder> encoders = new HashMap<>();
-        encoders.put(idForEncode, new BCryptPasswordEncoder());
-        encoders.put("scrypt", scryptPasswordEncoder);
-
-        // Создание и возврат DelegatingPasswordEncoder
-        return new DelegatingPasswordEncoder(idForEncode, encoders);
-    }
+//        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+//    @Bean
+//    public PasswordEncoder passwordEncoder() {
+//        // Основная схема кодирования паролей
+//        String idForEncode = "bcrypt";
+//
+//        // Настройка SCryptPasswordEncoder с параметрами
+//        SCryptPasswordEncoder scryptPasswordEncoder = new SCryptPasswordEncoder(
+//                16384, 8, 1, 32, 64);
+//        // мапа схем кодирования паролей
+//        Map<String, PasswordEncoder> encoders = new HashMap<>();
+//        encoders.put(idForEncode, new BCryptPasswordEncoder());
+//        encoders.put("scrypt", scryptPasswordEncoder);
+//
+//        // Создание и возврат DelegatingPasswordEncoder
+//        return new DelegatingPasswordEncoder(idForEncode, encoders);
+//    }
 
 //    @Bean
 //    public AuthenticationManager authenticationManager() {
