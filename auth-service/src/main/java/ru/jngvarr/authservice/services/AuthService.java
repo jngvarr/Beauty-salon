@@ -2,13 +2,12 @@ package ru.jngvarr.authservice.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.jngvarr.authservice.dto.AuthenticationRequest;
+import security.UserDetailsServiceImpl;
 
 @Service
 @RequiredArgsConstructor

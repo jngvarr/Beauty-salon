@@ -1,15 +1,15 @@
-package ru.jngvarr.authservice.services;
+package security;
 
 import dao.entities.people.User;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
-import ru.jngvarr.authservice.repositories.UserRepository;
+import org.springframework.stereotype.Component;
+import security.repositories.UserRepository;
 
 @Data
-@Service
+@Component
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserRepository userRepository;

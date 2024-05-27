@@ -1,12 +1,10 @@
 package ru.jngvarr.authservice.config;
 
 import lombok.Data;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -15,27 +13,16 @@ import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import ru.jngvarr.authservice.security.JwtRequestFilter;
-import ru.jngvarr.authservice.services.UserDetailsServiceImpl;
-import org.springframework.beans.factory.annotation.Value;
 
-import java.security.Key;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Data
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-
+@EnableMethodSecurity
 public class SecurityConfig {
-    private final UserDetailsServiceImpl userDetailsService;
-    private final JwtRequestFilter jwtRequestFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -43,10 +30,10 @@ public class SecurityConfig {
                 .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                                .requestMatchers("/users/registration", "/users/login").permitAll()
+                                .requestMatchers("/users/registration", "/users/login",  "/users").permitAll()
 //                .requestMatchers("/public/**").permitAll()
 //                .requestMatchers("/admin/**").hasRole("ADMIN")
-                                .anyRequest().authenticated()
+//                                .anyRequest().authenticated()
 //                ).formLogin(form -> form
 //                        .loginPage("/login")
 //                        .permitAll()
@@ -84,17 +71,17 @@ public class SecurityConfig {
 //        return new ProviderManager(List.of(authenticationProvider));
 //    }
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration corsConfiguration = new CorsConfiguration();
-        //Make the below setting as * to allow connection from any hos
-        corsConfiguration.setAllowedOrigins(List.of("http://localhost:4200"));
-        corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
-        corsConfiguration.setAllowCredentials(true);
-        corsConfiguration.setAllowedHeaders(List.of("*"));
-        corsConfiguration.setMaxAge(3600L);
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", corsConfiguration);
-        return source;
-    }
+//    @Bean
+//    public CorsConfigurationSource corsConfigurationSource() {
+//        CorsConfiguration corsConfiguration = new CorsConfiguration();
+//        //Make the below setting as * to allow connection from any hos
+//        corsConfiguration.setAllowedOrigins(List.of("http://localhost:4200"));
+//        corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
+//        corsConfiguration.setAllowCredentials(true);
+//        corsConfiguration.setAllowedHeaders(List.of("*"));
+//        corsConfiguration.setMaxAge(3600L);
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", corsConfiguration);
+//        return source;
+//    }
 }

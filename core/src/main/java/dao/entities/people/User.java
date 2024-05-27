@@ -29,8 +29,8 @@ public class User extends SomeOne implements UserDetails {
     @Column(name = "email")
     private final String email;
     @OneToMany
-    @JoinTable(name = "user_to_athorities",
-            joinColumns = @JoinColumn(name = "athority_id"),
+    @JoinTable(name = "user_to_authorities",
+            joinColumns = @JoinColumn(name = "authority_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     List<Authority> authorities;
     @OneToMany

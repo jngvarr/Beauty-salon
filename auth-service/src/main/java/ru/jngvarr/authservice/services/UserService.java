@@ -7,7 +7,9 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.jngvarr.authservice.repositories.UserRepository;
+import security.repositories.UserRepository;
+
+import java.util.List;
 
 @Service
 @Data
@@ -30,6 +32,10 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         // if(isUserIsManager(user))user.get   //TODO дописать добавление authorities
         return userRepository.save(user);
+    }
+
+    public List<User> getUsers() {
+        return userRepository.findAll();
     }
 
 }
