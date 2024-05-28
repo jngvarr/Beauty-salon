@@ -35,9 +35,7 @@ import java.util.stream.Collectors;
 public class RestSecurityConfiguration {
     private static final String[] AUTH_WHITELIST = {
             "/error",
-            "/actuator/**",
-            "/users/registration",
-            "/users/login"
+            "/actuator/**"
     };
     private static final RequestMatcher WHITELIST_MATCHER = new OrRequestMatcher(
             Arrays.stream(AUTH_WHITELIST)

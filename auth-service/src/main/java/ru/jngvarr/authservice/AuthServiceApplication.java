@@ -9,9 +9,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
 @EnableFeignClients(basePackages = {"feign_clients"})
-@ComponentScan(basePackages = "security")
-@EnableJpaRepositories(basePackages = "security.repositories")
-@EntityScan(basePackages = "dao")
+//@EnableJpaRepositories(basePackages = "security.repositories")
+//@EntityScan(basePackages = "dao")
 public class AuthServiceApplication {
 
     public static void main(String[] args) {

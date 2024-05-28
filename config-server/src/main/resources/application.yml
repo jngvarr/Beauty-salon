@@ -8,6 +8,6 @@ spring:
           uri: https://github.com/jngvarr/SalonConfig.git
           default-label: main
           #          basedir: c:\..\gb\springConfig\
-#            basedir: .\gb\springConfig\
+          basedir: .\gb\salonConfig\
 server:
   port: 8888

@@ -14,7 +14,6 @@ import java.util.List;
 
 @Service
 @Log4j2
-@Data
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;

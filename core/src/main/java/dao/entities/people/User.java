@@ -18,11 +18,11 @@ import java.util.List;
 @RequiredArgsConstructor
 @NoArgsConstructor(force = true)
 public class User extends SomeOne implements UserDetails {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    private Long id;
     @Column(name = "user_name")
-    private final String userName;
+    private String userName;
     @Setter
     @Column(name = "password")
     private String password;
@@ -30,13 +30,13 @@ public class User extends SomeOne implements UserDetails {
     private final String email;
     @OneToMany
     @JoinTable(name = "user_to_authorities",
-            joinColumns = @JoinColumn(name = "authority_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "authority_id"))
     List<Authority> authorities;
     @OneToMany
-    @JoinTable(name = "user_to_token",
-            joinColumns = @JoinColumn(name = "token_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @JoinTable(name = "user_to_tokens",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "token_id"))
     List<RefreshToken> tokens;
 
     @Override

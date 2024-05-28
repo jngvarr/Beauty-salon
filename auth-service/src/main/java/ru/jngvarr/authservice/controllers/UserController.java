@@ -6,12 +6,9 @@ import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -20,15 +17,14 @@ import ru.jngvarr.authservice.dto.AuthenticationResponse;
 import ru.jngvarr.authservice.repositories.RefreshTokenRepository;
 import ru.jngvarr.authservice.services.AuthService;
 import ru.jngvarr.authservice.services.RefreshTokenService;
+import ru.jngvarr.authservice.services.UserService;
 import security.JwtUtil;
 import security.UserDetailsServiceImpl;
-import ru.jngvarr.authservice.services.UserService;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 
-@Data
 @Log4j2
 @RestController
 @RequestMapping("/users")
@@ -43,20 +39,16 @@ public class UserController {
     private final RefreshTokenRepository tokenRepository;
     private final AuthService authService;
 
-//    @PreAuthorize("permitAll()")
     @GetMapping("/registration")
     public String getHello() {
         return "Привет от users";
     }
 
     @GetMapping
-//    @PreAuthorize("permitAll()")
-
     public List<User> getUsers() {
         log.debug("getUsers");
         return userService.getUsers();
     }
-
 
     @GetMapping("/byEmail/{email}")
     public User getUserByEmail(@PathVariable String email) {
@@ -79,12 +71,12 @@ public class UserController {
             throw new Exception("Incorrect username or password", e);
         }
 
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-        final String accessToken = jwtUtil.generateToken(userDetails, true);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+        String accessToken = jwtUtil.generateToken(userDetails, true);
 
         // Создание куки для токена обновления
-        final String refreshToken = jwtUtil.generateToken(userDetails, false);
-        Claims claims = getJwtUtil().extractAllClaims(refreshToken);
+        String refreshToken = jwtUtil.generateToken(userDetails, false);
+        Claims claims = jwtUtil.extractAllClaims(refreshToken);
         // Сохранение refresh token в базе данных
         refreshTokenService.saveRefreshToken(refreshToken, claims);
 
