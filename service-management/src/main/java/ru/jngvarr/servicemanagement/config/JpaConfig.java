@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
 @EntityScan(basePackages = "dao")
-@EnableJpaRepositories(basePackages = "ru.jngvarr.servicemanagement.repositories")
+@EnableJpaRepositories(basePackages = {"ru.jngvarr.servicemanagement.repositories","security.repositories"})
 public class JpaConfig {
 
 }

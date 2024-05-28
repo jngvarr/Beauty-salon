@@ -1,7 +1,9 @@
 package ru.jngvarr.authservice.services;
 
 import dao.entities.RefreshToken;
+import exceptions.NeededObjectNotFound;
 import io.jsonwebtoken.Claims;
+import jakarta.transaction.Transactional;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,6 +16,7 @@ import security.repositories.UserRepository;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +34,15 @@ public class RefreshTokenService {
         refreshTokenRepository.save(newRefreshToken);
     }
 
+    @Transactional
+    public void deleteRefreshToken(String refreshToken) {
+        RefreshToken toDeleteRefreshToken = refreshTokenRepository.findByToken(refreshToken);
+        if (toDeleteRefreshToken != null) {
+            refreshTokenRepository.deleteTokenByToken(refreshToken);
+        } else throw new NeededObjectNotFound("Token not found");
+    }
+
+
     public boolean validateRefreshToken(Claims claims) {
         UserDetails userDetails = new UserDetailsServiceImpl(userRepository)
                 .loadUserByUsername(jwtUtil.extractUsername(claims));
@@ -42,7 +54,8 @@ public class RefreshTokenService {
                 .atZone(ZoneId.systemDefault())
                 .toLocalDateTime();
     }
-    public RefreshToken findByToken(String token){
+
+    public RefreshToken findByToken(String token) {
         return tokenRepository.findByToken(token);
     }
 }

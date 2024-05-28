@@ -22,7 +22,7 @@ public class User extends SomeOne implements UserDetails {
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
 //    private Long id;
     @Column(name = "user_name")
-    private String userName;
+    private String username;
     @Setter
     @Column(name = "password")
     private String password;
@@ -51,7 +51,7 @@ public class User extends SomeOne implements UserDetails {
 
     @Override
     public String getUsername() {
-        return userName;
+        return username;
     }
 
     @Override

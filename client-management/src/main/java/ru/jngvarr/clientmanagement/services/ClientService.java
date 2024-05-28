@@ -1,6 +1,7 @@
 package ru.jngvarr.clientmanagement.services;
 
 import dao.entities.people.Client;
+import exceptions.NeededObjectNotFound;
 import exceptions.NotEnoughData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,8 +21,7 @@ public class ClientService {
 
     public Client getClient(Long id) {
         Optional<Client> neededClient = clientsRepository.findById(id);
-        if (neededClient.isPresent()) return neededClient.get();
-        else throw new IllegalArgumentException("Client not found");
+        return neededClient.orElseThrow(() -> new NeededObjectNotFound("Service not found: " + id));
     }
 
     public List<Client> getClientByContact(String contact) {

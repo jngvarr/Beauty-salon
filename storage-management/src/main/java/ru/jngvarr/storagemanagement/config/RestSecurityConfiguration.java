@@ -1,4 +1,4 @@
-package ru.jngvarr.clientmanagement.config;
+package ru.jngvarr.storagemanagement.config;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -36,7 +36,7 @@ public class RestSecurityConfiguration {
     private static final String[] AUTH_WHITELIST = {
             "/error",
             "/actuator/**",
-            "/clients/**"
+            "/storage/**"
     };
     private static final RequestMatcher WHITELIST_MATCHER = new OrRequestMatcher(
             Arrays.stream(AUTH_WHITELIST)

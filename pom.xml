@@ -31,7 +31,6 @@
         <module>service-management</module>
         <module>staff-management</module>
         <module>storage-management</module>
-        <module>web-client</module>
         <module>eureka</module>
         <module>config-server</module>
         <module>api-gateway</module>

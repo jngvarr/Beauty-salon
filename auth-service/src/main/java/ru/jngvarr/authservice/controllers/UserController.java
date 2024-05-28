@@ -8,13 +8,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import ru.jngvarr.authservice.dto.AuthenticationRequest;
 import ru.jngvarr.authservice.dto.AuthenticationResponse;
-import ru.jngvarr.authservice.repositories.RefreshTokenRepository;
+import ru.jngvarr.authservice.dto.RefreshTokenRequest;
 import ru.jngvarr.authservice.services.AuthService;
 import ru.jngvarr.authservice.services.RefreshTokenService;
 import ru.jngvarr.authservice.services.UserService;
@@ -33,10 +33,8 @@ import java.util.List;
 public class UserController {
     private final UserDetailsServiceImpl userDetailsService;
     private final UserService userService;
-    private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final RefreshTokenService refreshTokenService;
-    private final RefreshTokenRepository tokenRepository;
     private final AuthService authService;
 
     @GetMapping("/registration")
@@ -96,7 +94,7 @@ public class UserController {
             throw new RuntimeException("Refresh token is missing");
         }
         // Ищем токен в базе данных
-        RefreshToken refreshTokenEntity = tokenRepository.findByToken(refreshToken);
+        RefreshToken refreshTokenEntity = refreshTokenService.findByToken(refreshToken);
         if (refreshTokenEntity == null || refreshTokenEntity.getExpiryDate().isBefore(LocalDateTime.now())) {
             throw new RuntimeException("Invalid or expired refresh token");
         }
@@ -109,6 +107,11 @@ public class UserController {
         } else {
             throw new RuntimeException("Invalid refresh token");
         }
+    }
+
+    @PostMapping("/logout")
+    public void logout(@RequestBody RefreshTokenRequest request) {
+        refreshTokenService.deleteRefreshToken(request.getRefreshToken());
     }
 
     private String extractTokenFromCookie(HttpServletRequest request) {

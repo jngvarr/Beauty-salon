@@ -38,4 +38,5 @@ logging:
     ru.jngvarr: DEBUG
 #    org.springframework.security: TRACE
 
-
+jwt:
+  secret: "EFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/M="

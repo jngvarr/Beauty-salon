@@ -18,7 +18,7 @@ import java.util.*;
 public class JwtUtil {
     @Value("${jwt.secret}")
     private String SECRET_KEY;
-    private static final long ACCESS_TOKEN_VALIDITY = 1000 * 60 * 60 * 10; // 10 часов
+    private static final long ACCESS_TOKEN_VALIDITY = 1000 * 60 * 60; // 1 час
     private static final long REFRESH_TOKEN_VALIDITY = 1000 * 60 * 60 * 24 * 7; // 7 дней
 
     public String generateToken(UserDetails userDetails, boolean tT) {
