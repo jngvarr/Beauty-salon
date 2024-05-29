@@ -13,7 +13,7 @@ create table if not exists services
     consumables text[]
 );
 
-create table if not exists service_to_consumable
+create table if not exists service_to_consumables
 (
     id            SERIAL primary key,
     service_id    SERIAL NOT NULL,

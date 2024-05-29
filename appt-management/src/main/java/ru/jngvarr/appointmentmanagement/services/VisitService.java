@@ -38,12 +38,12 @@ public class VisitService {
     }
 
     public List<Visit> getVisits() {
-        log.debug("getVisits - VisitService");
         List<Visit> visits = new ArrayList<>();
         List<VisitData> visitData = visitRepository.findAll();
         for (VisitData vd : visitData) {
             Visit visit = getVisitFromVisitData(vd);
-            visits.add(visit);
+            visits.add(visit);        log.debug("getVisits - VisitService");
+
         }
         return visits;
     }

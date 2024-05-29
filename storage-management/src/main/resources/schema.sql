@@ -75,14 +75,14 @@ create table if not exists employees
     function   TEXT NOT NULL
 );
 --
-insert into service_to_consumables (service_id, consumable_id)
-select s.id, c.id
-from services s,
-     consumables c
-where s.title = 'Простое окрашивание'
-  and c.title in ('Краска',
-                  'Полотенце',
-                  'Оксидант1',
-                  'Оксидант2',
-                  'Оксидант3'
-    )
+-- insert into service_to_consumables (service_id, consumable_id)
+-- select s.id, c.id
+-- from services s,
+--      consumables c
+-- where s.title = 'Простое окрашивание'
+--   and c.title in ('Краска',
+--                   'Полотенце',
+--                   'Оксидант1',
+--                   'Оксидант2',
+--                   'Оксидант3'
+--     )

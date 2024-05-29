@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -124,5 +125,10 @@ public class UserController {
             }
         }
         return null;
+    }
+
+    @Secured("ROLE_TECK_ADMIN")
+    public void addRoleAdmin() {
+
     }
 }

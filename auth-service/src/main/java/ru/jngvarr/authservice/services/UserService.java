@@ -50,10 +50,15 @@ public class UserService {
 
         // Сохранение новых авторитетов
         userAuthorities.stream()
-                .filter(authorityName -> !existingAuthoritiesNames.contains(authorityName))
-                .map(authorityName -> new Authority(authorityName))
-                .forEach(authorityRepository::save);
-        return userRepository.save(user);
+                .filter(authority -> !existingAuthoritiesNames.contains(authority))
+                .forEach(authority -> {
+                    Authority auth = new Authority();
+                    auth.setName(authority);
+                    authorityRepository.save(auth);
+                });
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
+        return user;
     }
 
     public List<User> getUsers() {
