@@ -36,7 +36,8 @@ public class RestSecurityConfiguration {
     private static final String[] AUTH_WHITELIST = {
             "/error",
             "/actuator/**",
-            "/clients/**"
+            "/clients/**",
+            "/clients/create"
     };
     private static final RequestMatcher WHITELIST_MATCHER = new OrRequestMatcher(
             Arrays.stream(AUTH_WHITELIST)

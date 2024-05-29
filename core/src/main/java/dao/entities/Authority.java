@@ -2,9 +2,11 @@ package dao.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@NoArgsConstructor
 @Table(name = "authorities")
 public class Authority {
     @Id
@@ -12,4 +14,5 @@ public class Authority {
     Long id;
     @Column(name = "name")
     String name;
+
 }
