@@ -8,6 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -18,9 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @NoArgsConstructor(force = true)
 public class User extends SomeOne implements UserDetails {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long id;
+
     @Column(name = "user_name")
     private String username;
     @Setter
@@ -32,20 +31,20 @@ public class User extends SomeOne implements UserDetails {
     @JoinTable(name = "user_to_authorities",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "authority_id"))
-    List<Authority> authorities;
+    List<Authority> authorities = new ArrayList<>();
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "user_to_tokens",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "token_id"))
-    List<RefreshToken> tokens;
+    List<RefreshToken> tokens = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        return authorities;
     }
 
     public void setAuthorities(Authority authority) {
-        authorities.add(authority);
+        this.authorities.add(authority);
     }
 
     @Override

@@ -38,27 +38,13 @@ public class UserService {
 
     @Transactional
     public User createUser(User user) {
-        // Преобразование Collection<? extends GrantedAuthority> в List<String>
-        List<String> userAuthorities = user.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .toList();
-
-        // Получение имен всех существующих авторитетов из базы данных
-        List<String> existingAuthoritiesNames = getAuthorities().stream()
-                .map(Authority::getName)
-                .toList();
-
-        // Сохранение новых авторитетов
-        userAuthorities.stream()
-                .filter(authority -> !existingAuthoritiesNames.contains(authority))
-                .forEach(authority -> {
-                    Authority auth = new Authority();
-                    auth.setName(authority);
-                    authorityRepository.save(auth);
-                });
+        List<User> users = userRepository.findAll();
+        if (users.contains(user)) throw new RuntimeException("Such user is already exists");
+        Authority userAuth = new Authority("ROLE_USER");
+        if (authorityRepository.findAll().isEmpty()) authorityRepository.save(userAuth);
+        user.setAuthorities(userAuth);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
-        return user;
+        return userRepository.save(user);
     }
 
     public List<User> getUsers() {
