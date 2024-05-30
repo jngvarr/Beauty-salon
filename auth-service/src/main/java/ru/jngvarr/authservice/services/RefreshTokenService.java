@@ -18,20 +18,20 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.Optional;
 
+@Data
 @Service
 @RequiredArgsConstructor
-@Data
 public class RefreshTokenService {
     private final UserRepository userRepository;
     private final RefreshTokenRepository tokenRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtUtil jwtUtil;
 
-    public void saveRefreshToken(String refreshToken, Claims claims) {
+    public RefreshToken saveRefreshToken(String refreshToken, Claims claims) {
         RefreshToken newRefreshToken = new RefreshToken();
         newRefreshToken.setToken(refreshToken);
         newRefreshToken.setExpiryDate(convertToLocalDateTime(jwtUtil.extractExpiration(claims)));
-        refreshTokenRepository.save(newRefreshToken);
+        return refreshTokenRepository.save(newRefreshToken);
     }
 
     @Transactional

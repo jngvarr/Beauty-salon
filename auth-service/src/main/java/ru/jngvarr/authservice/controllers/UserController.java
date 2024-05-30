@@ -70,20 +70,22 @@ public class UserController {
             throw new Exception("Incorrect username or password", e);
         }
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-        String accessToken = jwtUtil.generateToken(userDetails, true);
+        User user = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+        String accessToken = jwtUtil.generateToken(user, true);
 
-        // Создание куки для токена обновления
-        String refreshToken = jwtUtil.generateToken(userDetails, false);
+        // Создание токена обновления
+        String refreshToken = jwtUtil.generateToken(user, false);
         Claims claims = jwtUtil.extractAllClaims(refreshToken);
         // Сохранение refresh token в базе данных
-        refreshTokenService.saveRefreshToken(refreshToken, claims);
-
-        Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
-        refreshTokenCookie.setPath("/");
-        refreshTokenCookie.setHttpOnly(true);
-        refreshTokenCookie.setSecure(true); // Установка флага secure для HTTPS
-        response.addCookie(refreshTokenCookie);
+        RefreshToken rf = refreshTokenService.saveRefreshToken(refreshToken, claims);
+        user.getTokens().add(rf);
+        userService.updateUserToken(user);
+//         Сохранение refresh Токена в куки
+//        Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
+//        refreshTokenCookie.setPath("/");
+//        refreshTokenCookie.setHttpOnly(true);
+//        refreshTokenCookie.setSecure(true); // Установка флага secure для HTTPS
+//        response.addCookie(refreshTokenCookie);
         return new AuthenticationResponse(accessToken);
     }
 
@@ -94,7 +96,7 @@ public class UserController {
         if (refreshToken == null || refreshToken.isEmpty()) {
             throw new RuntimeException("Refresh token is missing");
         }
-        // Ищем токен в базе данных
+        // Ищем токен в базе данных //TODO зачем?
         RefreshToken refreshTokenEntity = refreshTokenService.findByToken(refreshToken);
         if (refreshTokenEntity == null || refreshTokenEntity.getExpiryDate().isBefore(LocalDateTime.now())) {
             throw new RuntimeException("Invalid or expired refresh token");
@@ -127,7 +129,7 @@ public class UserController {
         return null;
     }
 
-    @Secured("ROLE_TECK_ADMIN")
+    @Secured("ROLE_TECH_ADMIN")
     public void addRoleAdmin() {
 
     }

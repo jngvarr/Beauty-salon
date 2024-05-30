@@ -16,6 +16,7 @@ import security.repositories.UserRepository;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,13 +39,24 @@ public class UserService {
 
     @Transactional
     public User createUser(User user) {
-        List<User> users = userRepository.findAll();
-        if (users.contains(user)) throw new RuntimeException("Such user is already exists");
-        Authority userAuth = new Authority("ROLE_USER");
-        if (authorityRepository.findAll().isEmpty()) authorityRepository.save(userAuth);
-        user.setAuthorities(userAuth);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
+//        if (userRepository.findAll().stream()
+//                .noneMatch(u -> u.getUsername().equals(user.getUsername()) || u.getEmail().equals(user.getEmail()))) {
+        boolean userExists = userRepository.existsByUsernameOrEmail(user.getUsername(), user.getEmail());
+        if (!userExists) {
+            if (authorityRepository.count() == 0) {
+                authorityRepository.save(new Authority("ROLE_USER"));
+            }
+            user.setAuthorities(authorityRepository.getAuthorityByName("ROLE_USER"));
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            return userRepository.save(user);
+        } else throw new RuntimeException("Such user already exists");
+    }
+
+    public User updateUserToken(User user) {
+        User updatedUser = userRepository.getReferenceById(user.getId());
+        updatedUser.setTokens(user.getTokens());
+        userRepository.save(updatedUser);
+        return updatedUser;
     }
 
     public List<User> getUsers() {
@@ -54,6 +66,5 @@ public class UserService {
     public List<Authority> getAuthorities() {
         return authorityRepository.findAll();
     }
-
 }
 

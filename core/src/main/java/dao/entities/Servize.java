@@ -28,7 +28,7 @@ public class Servize {
     private Integer serviceDurationInMinutes;
     @Column(name = "description")
     private String description;
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(name = "service_to_consumables",
             joinColumns = @JoinColumn(name = "service_id"),
             inverseJoinColumns = @JoinColumn(name = "consumable_id"))

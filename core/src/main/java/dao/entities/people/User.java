@@ -4,6 +4,7 @@ import dao.entities.Authority;
 import dao.entities.RefreshToken;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,11 +12,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
-@EqualsAndHashCode(callSuper = true)
+//@EqualsAndHashCode(callSuper = true)
+
 @Data
 @Entity
 @Table(name = "users")
+@EqualsAndHashCode(callSuper = true)
 @RequiredArgsConstructor
 @NoArgsConstructor(force = true)
 public class User extends SomeOne implements UserDetails {
@@ -71,5 +75,4 @@ public class User extends SomeOne implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
 }

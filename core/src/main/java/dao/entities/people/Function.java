@@ -12,11 +12,11 @@ import lombok.Getter;
 
 @Getter
 public enum Function {
-    MANAGER("Администратор"),
+    ADMIN("Администратор"),
     HAIRDRESSER("Парикмахер"),
     NAILMASTER("Ногтевой мастер"),
     CLEANING("Уборщица"),
-    ADMIN ("Системный администратор");
+    TECH_ADMIN ("Системный администратор");
 
 
     private final String function;
