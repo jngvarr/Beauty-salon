@@ -8,11 +8,23 @@ spring:
     active: eclient
   config:
     import: configserver:http://localhost:8888
-    main:
-      web-application-type:
-        reactive
+#    main:
+#      web-application-type:
+#        reactive
   cloud:
     gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods:
+              - GET
+              - OPTIONS
+              - PUT
+              - POST
+              - DELETE
+              - PATCH
+        add-to-simple-url-handler-mapping: true
       discovery:
         locator:
           enabled: true
@@ -47,5 +59,7 @@ spring:
           uri: http://localhost:8761/
           predicates:
             - Path=/eureka/**
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_UNIQUE
 #  main:
 #    web-application-type: reactive

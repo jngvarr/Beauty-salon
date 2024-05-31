@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/clients")
-@CrossOrigin(origins = "http://localhost:4200") //Политика CORS определяет, какие домены могут обращаться к ресурсам сервера
+//@CrossOrigin() //Политика CORS определяет, какие домены могут обращаться к ресурсам сервера
 public class ClientController {
     private final ClientService clientService;
 

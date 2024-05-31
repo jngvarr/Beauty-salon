@@ -5,6 +5,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.Customizer;
@@ -20,10 +21,14 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import security.provider.JwtAuthFilter;
 import security.provider.JwtCandidateAuthenticationProvider;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Configuration
@@ -51,6 +56,7 @@ public class RestSecurityConfiguration {
         AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
 
         http
+                .authorizeHttpRequests(matcherRegistry -> matcherRegistry.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll())
                 .authorizeHttpRequests(matcherRegistry -> matcherRegistry.requestMatchers(WHITELIST_MATCHER).permitAll())
                 .authorizeHttpRequests(matcherRegistry -> matcherRegistry.anyRequest().authenticated());
 
@@ -64,7 +70,14 @@ public class RestSecurityConfiguration {
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::deny)
                         .cacheControl(Customizer.withDefaults()))
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors(AbstractHttpConfigurer::disable)
+//                .cors(c -> c.configurationSource(request -> {
+//                    CorsConfiguration configuration = new CorsConfiguration();
+//                    configuration.setAllowedOrigins(List.of("*"));
+//                    configuration.addAllowedHeader("*");
+//                    configuration.addAllowedMethod("*");
+//                    return configuration;
+//                }))
+//                .cors(Customizer.withDefaults())
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .logout(AbstractHttpConfigurer::disable);
@@ -83,4 +96,14 @@ public class RestSecurityConfiguration {
         return new JwtCandidateAuthenticationProvider();
     }
 
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("*"));
+        configuration.addAllowedHeader("*");
+        configuration.addAllowedMethod("*");
+        UrlBasedCorsConfigurationSource result = new UrlBasedCorsConfigurationSource();
+        result.registerCorsConfiguration("/**", configuration);
+        return result;
+    }
 }
