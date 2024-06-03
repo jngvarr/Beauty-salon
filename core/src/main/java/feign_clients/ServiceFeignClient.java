@@ -9,8 +9,8 @@ import java.util.List;
 
 @FeignClient(name = "services", configuration = JwtFeignConfig.class)
 public interface ServiceFeignClient {
-    @GetMapping("/services")
-    public List<Servize> getServices();
+    @GetMapping("/api/services")
+    List<Servize> getServices();
 
     @RequestMapping(value = "/services/{id}", method = RequestMethod.GET)
     Servize getService(@PathVariable Long id);

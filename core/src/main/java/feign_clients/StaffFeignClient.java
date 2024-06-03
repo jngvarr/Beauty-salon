@@ -9,7 +9,7 @@ import java.util.List;
 @FeignClient(name = "staff", configuration = JwtFeignConfig.class)
 public interface StaffFeignClient {
 
-    @GetMapping("/staff")
+    @GetMapping("/api/staff")
     List<Employee> getEmployees();
 
     @GetMapping("/staff/{id}")
