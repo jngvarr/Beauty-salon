@@ -11,22 +11,22 @@ public interface ClientFeignClient {
     @GetMapping("/api/clients")
     List<Client> getClients();
 
-    @GetMapping("/clients/{id}")
+    @GetMapping("/api/clients/{id}")
     Client getClient(@PathVariable Long id);
 
-    @GetMapping("/clients/by-contact/{contact}")
+    @GetMapping("/api/clients/by-contact/{contact}")
     Client getClientByContact(@PathVariable String contact);
 
-    @RequestMapping(value = "/clients/create", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/clients/create", method = RequestMethod.POST)
     Client addClient(@RequestBody Client clientToAdd);
 
-    @RequestMapping(value = "/clients/update/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/api/clients/update/{id}", method = RequestMethod.PUT)
     Client updateClient(@RequestBody Client newData, @PathVariable Long id);
 
-    @RequestMapping(value = "/clients/delete/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/api/clients/delete/{id}", method = RequestMethod.DELETE)
     void deleteClient(@PathVariable Long id);
 
-    @GetMapping("/clients/clear")
+    @GetMapping("/api/clients/clear")
     void clearAllData();
 
 }

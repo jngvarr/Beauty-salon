@@ -4,18 +4,21 @@ import dao.entities.people.Client;
 import exceptions.NeededObjectNotFound;
 import exceptions.NotEnoughData;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import ru.jngvarr.clientmanagement.repositories.ClientsRepository;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Log4j2
 @Service
 @RequiredArgsConstructor
 public class ClientService {
     private final ClientsRepository clientsRepository;
 
     public List<Client> getClients() {
+        log.debug("ClientService get Clients");
         return clientsRepository.findAll();
     }
 

@@ -12,18 +12,18 @@ public interface ServiceFeignClient {
     @GetMapping("/api/services")
     List<Servize> getServices();
 
-    @RequestMapping(value = "/services/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/services/{id}", method = RequestMethod.GET)
     Servize getService(@PathVariable Long id);
 
-    @RequestMapping(value = "/services/duration/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/services/duration/{id}", method = RequestMethod.GET)
     int getServiceDuration(@PathVariable Long id);
 
-    @PostMapping("/services/create")
+    @PostMapping("/api/services/create")
     void addService(Servize service);
 
-    @RequestMapping(value = "/services/update/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/api/services/update/{id}", method = RequestMethod.PUT)
     Servize updateService(@RequestBody Servize newData, @PathVariable Long id);
 
-    @DeleteMapping("/services/delete/{id}")
+    @DeleteMapping("/api/services/delete/{id}")
     void deleteService(@PathVariable Long id);
 }

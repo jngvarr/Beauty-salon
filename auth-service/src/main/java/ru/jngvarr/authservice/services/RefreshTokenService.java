@@ -16,7 +16,6 @@ import security.repositories.UserRepository;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.Optional;
 
 @Data
 @Service
@@ -24,21 +23,20 @@ import java.util.Optional;
 public class RefreshTokenService {
     private final UserRepository userRepository;
     private final RefreshTokenRepository tokenRepository;
-    private final RefreshTokenRepository refreshTokenRepository;
     private final JwtUtil jwtUtil;
 
     public RefreshToken saveRefreshToken(String refreshToken, Claims claims) {
         RefreshToken newRefreshToken = new RefreshToken();
         newRefreshToken.setToken(refreshToken);
         newRefreshToken.setExpiryDate(convertToLocalDateTime(jwtUtil.extractExpiration(claims)));
-        return refreshTokenRepository.save(newRefreshToken);
+        return tokenRepository.save(newRefreshToken);
     }
 
     @Transactional
     public void deleteRefreshToken(String refreshToken) {
-        RefreshToken toDeleteRefreshToken = refreshTokenRepository.findByToken(refreshToken);
+        RefreshToken toDeleteRefreshToken = tokenRepository.findByToken(refreshToken);
         if (toDeleteRefreshToken != null) {
-            refreshTokenRepository.deleteTokenByToken(refreshToken);
+            tokenRepository.deleteTokenByToken(refreshToken);
         } else throw new NeededObjectNotFound("Token not found");
     }
 

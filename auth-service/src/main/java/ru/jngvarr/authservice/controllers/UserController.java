@@ -8,7 +8,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,7 +29,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
-//@CrossOrigin(origins = "http://localhost:4200")
 public class UserController {
     private final UserDetailsServiceImpl userDetailsService;
     private final UserService userService;
@@ -43,10 +41,16 @@ public class UserController {
         return "Привет от users";
     }
 
+//    @PreAuthorize("HASROLE")
     @GetMapping
     public List<User> getUsers() {
         log.debug("getUsers");
         return userService.getUsers();
+    }
+
+    @GetMapping("/tokens")
+    public List<RefreshToken> getTokens() {
+        return refreshTokenService.getTokenRepository().findAll();
     }
 
     @GetMapping("/byEmail/{email}")
@@ -54,7 +58,6 @@ public class UserController {
         return userService.getUserByEmail(email);
     }
 
-    //    @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping("/registration")
     public User userRegistration(@RequestBody User user) {
         log.debug("user registration, id: {} ", user.getId());
@@ -80,7 +83,7 @@ public class UserController {
         RefreshToken rf = refreshTokenService.saveRefreshToken(refreshToken, claims);
         user.getTokens().add(rf);
         userService.updateUserToken(user);
-//         Сохранение refresh Токена в куки
+//        Сохранение refresh Токена в куки
 //        Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
 //        refreshTokenCookie.setPath("/");
 //        refreshTokenCookie.setHttpOnly(true);

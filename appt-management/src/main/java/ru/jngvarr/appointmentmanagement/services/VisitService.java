@@ -32,6 +32,7 @@ public class VisitService {
 
     public Visit getVisitFromVisitData(VisitData vd) {
         Servize service = serviceFeignClient.getService(vd.getServiceId());
+        log.debug("getVisitFromVisitData {}", service);
         Client client = clientFeignClient.getClient(vd.getClientId());
         Employee master = employeeFeignClient.getEmployee(vd.getEmployeeId());
         return new Visit(vd.getId(), vd.getVisitDate(), vd.getStartTime(), service, client, master);
@@ -40,10 +41,10 @@ public class VisitService {
     public List<Visit> getVisits() {
         List<Visit> visits = new ArrayList<>();
         List<VisitData> visitData = visitRepository.findAll();
+        log.debug("getVisits - VisitService");
         for (VisitData vd : visitData) {
             Visit visit = getVisitFromVisitData(vd);
-            visits.add(visit);        log.debug("getVisits - VisitService");
-
+            visits.add(visit);
         }
         return visits;
     }
