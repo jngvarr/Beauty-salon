@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -83,12 +84,6 @@ public class UserController {
         RefreshToken rf = refreshTokenService.saveRefreshToken(refreshToken, claims);
         user.getTokens().add(rf);
         userService.updateUserToken(user);
-//        Сохранение refresh Токена в куки
-//        Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
-//        refreshTokenCookie.setPath("/");
-//        refreshTokenCookie.setHttpOnly(true);
-//        refreshTokenCookie.setSecure(true); // Установка флага secure для HTTPS
-//        response.addCookie(refreshTokenCookie);
         return new AuthenticationResponse(accessToken);
     }
 
@@ -115,6 +110,7 @@ public class UserController {
         }
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping("/logout")
     public void logout(@RequestBody RefreshTokenRequest request) {
         refreshTokenService.deleteRefreshToken(request.getRefreshToken());
