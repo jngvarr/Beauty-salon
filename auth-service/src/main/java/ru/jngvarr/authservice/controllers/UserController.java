@@ -9,13 +9,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import ru.jngvarr.authservice.dto.AuthenticationRequest;
 import ru.jngvarr.authservice.dto.AuthenticationResponse;
-import ru.jngvarr.authservice.dto.RefreshTokenRequest;
 import ru.jngvarr.authservice.services.AuthService;
 import ru.jngvarr.authservice.services.RefreshTokenService;
 import ru.jngvarr.authservice.services.UserService;
@@ -42,7 +42,7 @@ public class UserController {
         return "Привет от users";
     }
 
-//    @PreAuthorize("HASROLE")
+//    @PreAuthorize("HAS_ROLE.TECH_ADMIN")
     @GetMapping
     public List<User> getUsers() {
         log.debug("getUsers");
@@ -75,8 +75,8 @@ public class UserController {
         }
 
         User user = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+        // Создание токена доступа
         String accessToken = jwtUtil.generateToken(user, true);
-
         // Создание токена обновления
         String refreshToken = jwtUtil.generateToken(user, false);
         Claims claims = jwtUtil.extractAllClaims(refreshToken);
@@ -112,8 +112,11 @@ public class UserController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping("/logout")
-    public void logout(@RequestBody RefreshTokenRequest request) {
-        refreshTokenService.deleteRefreshToken(request.getRefreshToken());
+//    public void logout(@RequestBody RefreshTokenRequest request) {
+    public void logout() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        userService.logoutByUsername(username);
     }
 
     private String extractTokenFromCookie(HttpServletRequest request) {
@@ -128,8 +131,5 @@ public class UserController {
         return null;
     }
 
-    @Secured("ROLE_TECH_ADMIN")
-    public void addRoleAdmin() {
-
-    }
+//    @Secured("ROLE_TECH_ADMIN") public void addRoleAdmin() {}
 }

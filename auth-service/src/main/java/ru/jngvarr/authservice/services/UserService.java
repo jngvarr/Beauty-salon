@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.jngvarr.authservice.repositories.AuthorityRepository;
+import security.UserDetailsServiceImpl;
 import security.repositories.UserRepository;
 
 import java.util.Collections;
@@ -27,6 +28,7 @@ public class UserService {
     private final AuthorityRepository authorityRepository;
     private final PasswordEncoder passwordEncoder;
     private final StaffFeignClient staffFeignClient;
+    private final UserDetailsServiceImpl userDetailsService;
 
     public boolean getClientByUserContact(User user) {
         Employee employee = staffFeignClient.getEmployeeByPhone(user.getContact());
@@ -65,6 +67,12 @@ public class UserService {
 
     public List<Authority> getAuthorities() {
         return authorityRepository.findAll();
+    }
+
+    public void logoutByUsername(String username) {
+        User toLogout = userDetailsService.loadUserByUsername(username);
+        toLogout.getTokens().clear();
+        userRepository.save(toLogout);
     }
 }
 

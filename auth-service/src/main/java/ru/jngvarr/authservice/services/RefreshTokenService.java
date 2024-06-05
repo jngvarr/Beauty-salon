@@ -6,6 +6,7 @@ import io.jsonwebtoken.Claims;
 import jakarta.transaction.Transactional;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import ru.jngvarr.authservice.repositories.RefreshTokenRepository;
@@ -13,6 +14,7 @@ import security.JwtUtil;
 import security.UserDetailsServiceImpl;
 import security.repositories.UserRepository;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
@@ -55,5 +57,14 @@ public class RefreshTokenService {
 
     public RefreshToken findByToken(String token) {
         return tokenRepository.findByToken(token);
+    }
+    public RefreshToken findByAccessToken(String token) {
+
+        return tokenRepository.findByToken(token);
+    }
+
+    @Scheduled(cron = "@daily") // Запускать ежедневно
+    public void removeExpiredTokens() {
+        tokenRepository.deleteAllExpiredSince(Instant.now());
     }
 }
