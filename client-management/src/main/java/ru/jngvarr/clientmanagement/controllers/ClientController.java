@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.jngvarr.clientmanagement.services.ClientService;
 
@@ -18,11 +19,13 @@ import java.util.List;
 public class ClientController {
     private final ClientService clientService;
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping
     public ResponseEntity<List<Client>> showAll() {
         return ResponseEntity.ok().body(clientService.getClients());
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/clear")
     public ResponseEntity<Void> clearAllData() {
         clientService.clearAllData();
@@ -50,19 +53,19 @@ public class ClientController {
                 (name.isEmpty() ? clientService.getClientByLastName(lastName) : clientService.getClientByName(name)) :
                 clientService.getClientByFullName(name, lastName);
     }
-
+    @PreAuthorize("hasRole('TECH_ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/create")
     public Client createClient(@RequestBody Client newClient) {
         log.debug("create-client {}", newClient);
         return clientService.addClient(newClient);
     }
-
+    @PreAuthorize("hasRole('TECH_ADMIN')")
     @PutMapping("/update/{id}")
     public Client updateClient(@RequestBody Client newClient, @PathVariable Long id) {
         return clientService.update(newClient, id);
     }
-
+    @PreAuthorize("hasRole('TECH_ADMIN')")
     @DeleteMapping("/delete/{id}")
     public void deleteClient(@PathVariable Long id) {
         clientService.deleteClient(id);

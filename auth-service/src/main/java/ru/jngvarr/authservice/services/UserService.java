@@ -6,25 +6,22 @@ import dao.entities.people.User;
 import feign_clients.StaffFeignClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.jngvarr.authservice.repositories.AuthorityRepository;
+import ru.jngvarr.authservice.repositories.RefreshTokenRepository;
 import security.UserDetailsServiceImpl;
 import security.repositories.UserRepository;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Log4j2
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
     private final AuthorityRepository authorityRepository;
     private final PasswordEncoder passwordEncoder;
     private final StaffFeignClient staffFeignClient;
