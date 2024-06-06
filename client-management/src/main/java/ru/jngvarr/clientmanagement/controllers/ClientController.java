@@ -24,7 +24,6 @@ public class ClientController {
     public ResponseEntity<List<Client>> showAll() {
         return ResponseEntity.ok().body(clientService.getClients());
     }
-
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/clear")
     public ResponseEntity<Void> clearAllData() {
@@ -53,19 +52,19 @@ public class ClientController {
                 (name.isEmpty() ? clientService.getClientByLastName(lastName) : clientService.getClientByName(name)) :
                 clientService.getClientByFullName(name, lastName);
     }
-    @PreAuthorize("hasRole('TECH_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/create")
     public Client createClient(@RequestBody Client newClient) {
         log.debug("create-client {}", newClient);
         return clientService.addClient(newClient);
     }
-    @PreAuthorize("hasRole('TECH_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/update/{id}")
     public Client updateClient(@RequestBody Client newClient, @PathVariable Long id) {
         return clientService.update(newClient, id);
     }
-    @PreAuthorize("hasRole('TECH_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete/{id}")
     public void deleteClient(@PathVariable Long id) {
         clientService.deleteClient(id);
