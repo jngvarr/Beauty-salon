@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.jngvarr.clientmanagement.services.ClientService;
 
 import java.util.List;
+import java.util.Map;
 
 @Log4j2
 @RestController
@@ -19,11 +20,16 @@ import java.util.List;
 public class ClientController {
     private final ClientService clientService;
 
+    //    @PreAuthorize("hasRole('USER')")
     @PreAuthorize("isAuthenticated()")
     @GetMapping
-    public ResponseEntity<List<Client>> showAll() {
+    public ResponseEntity<List<Client>> showAll(@RequestHeader Map<String, String> headers) {
+        headers.forEach((key, value) -> {
+            System.out.printf("Header '%s' = %s%n", key, value);
+        });
         return ResponseEntity.ok().body(clientService.getClients());
     }
+
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/clear")
     public ResponseEntity<Void> clearAllData() {
@@ -52,6 +58,7 @@ public class ClientController {
                 (name.isEmpty() ? clientService.getClientByLastName(lastName) : clientService.getClientByName(name)) :
                 clientService.getClientByFullName(name, lastName);
     }
+
     @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/create")
@@ -59,11 +66,13 @@ public class ClientController {
         log.debug("create-client {}", newClient);
         return clientService.addClient(newClient);
     }
+
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/update/{id}")
     public Client updateClient(@RequestBody Client newClient, @PathVariable Long id) {
         return clientService.update(newClient, id);
     }
+
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete/{id}")
     public void deleteClient(@PathVariable Long id) {

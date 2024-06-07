@@ -30,6 +30,7 @@ public class JwtAuthFilter extends AbstractAuthenticationProcessingFilter {
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
         String jwt = extractAuthToken(request);
+        log.debug("Authorization Header: {}", request.getHeader("Authorization"));
         if (jwt == null) {
             throw new BadCredentialsException("JWT is not present or invalid");
         }
