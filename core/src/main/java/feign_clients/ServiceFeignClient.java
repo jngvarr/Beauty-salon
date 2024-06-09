@@ -2,6 +2,7 @@ package feign_clients;
 
 import dao.entities.Servize;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
 public interface ServiceFeignClient {
     @GetMapping("/api/services")
     List<Servize> getServices();
-
+    @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "/api/services/{id}", method = RequestMethod.GET)
     Servize getService(@PathVariable Long id);
 
