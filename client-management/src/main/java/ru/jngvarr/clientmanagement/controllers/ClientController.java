@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.jngvarr.clientmanagement.services.ClientService;
 
 import java.util.List;
-import java.util.Map;
 
 @Log4j2
 @RestController
@@ -20,14 +19,11 @@ import java.util.Map;
 public class ClientController {
     private final ClientService clientService;
 
-    //    @PreAuthorize("hasRole('USER')")
-    @PreAuthorize("isAuthenticated()")
+    //    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAnyRole('USER')")
     @GetMapping
-    public ResponseEntity<List<Client>> showAll(@RequestHeader Map<String, String> headers) {
-        headers.forEach((key, value) -> {
-            System.out.printf("Header '%s' = %s%n", key, value);
-        });
-        return ResponseEntity.ok().body(clientService.getClients());
+    public List<Client> showAll() {
+        return clientService.getClients();
     }
 
     @PreAuthorize("hasRole('ADMIN')")

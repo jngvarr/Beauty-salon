@@ -7,6 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -20,6 +21,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
+import security.JwtUtil;
 import security.provider.JwtAuthFilter;
 import security.provider.JwtCandidateAuthenticationProvider;
 
@@ -33,10 +35,11 @@ import java.util.stream.Collectors;
 @Log4j2
 @ComponentScan(basePackages = "security")
 public class RestSecurityConfiguration {
+
     private static final String[] AUTH_WHITELIST = {
             "/error",
             "/actuator/**",
-            "/clients/**"
+//            "/clients/**"
     };
     private static final RequestMatcher WHITELIST_MATCHER = new OrRequestMatcher(
             Arrays.stream(AUTH_WHITELIST)
@@ -47,15 +50,15 @@ public class RestSecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
+//        AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
 
         http
                 .authorizeHttpRequests(matcherRegistry -> matcherRegistry.requestMatchers(WHITELIST_MATCHER).permitAll())
                 .authorizeHttpRequests(matcherRegistry -> matcherRegistry.anyRequest().authenticated());
 
         http
-                .authenticationProvider(authenticationProvider())
-                .addFilterBefore(authenticationFilter(authenticationManager), X509AuthenticationFilter.class);
+                .authenticationProvider(authenticationProvider(null))
+                .addFilterBefore(authenticationFilter(null), X509AuthenticationFilter.class);
 
         http
                 .sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -71,15 +74,20 @@ public class RestSecurityConfiguration {
         return http.build();
     }
 
-    private JwtAuthFilter authenticationFilter(AuthenticationManager authenticationManager) {
+    @Bean
+    public JwtAuthFilter authenticationFilter(AuthenticationManager authenticationManager) {
         JwtAuthFilter result = new JwtAuthFilter(PROTECTED_MATCHER);
         result.setAuthenticationManager(authenticationManager);
         return result;
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider() {
-        return new JwtCandidateAuthenticationProvider();
+    public AuthenticationProvider authenticationProvider(JwtUtil jwtUtil) {
+        return new JwtCandidateAuthenticationProvider(jwtUtil);
     }
 
+    @Bean
+    public AuthenticationManager authenticationManager(){
+        return new ProviderManager(authenticationProvider(null));
+    }
 }

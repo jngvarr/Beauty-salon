@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 @Log4j2
 @RequiredArgsConstructor
-@NoArgsConstructor(force = true)
+//@NoArgsConstructor(force = true)
 public class JwtCandidateAuthenticationProvider implements AuthenticationProvider {
 
     private final JwtUtil jwtUtil;

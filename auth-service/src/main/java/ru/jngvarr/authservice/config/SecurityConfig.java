@@ -38,7 +38,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/users/**").permitAll()
-//                        .requestMatchers("/users/**").permitAll()
+                        .requestMatchers("/actuator/**").permitAll()
                 );
         http
                 .sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
