@@ -11,6 +11,7 @@ spring:
 
   application:
     name: storage
+
   config:
     import:
       configserver:http://localhost:8888
