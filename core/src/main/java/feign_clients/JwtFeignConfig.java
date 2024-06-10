@@ -14,8 +14,8 @@ public class JwtFeignConfig {
     public RequestInterceptor requestInterceptor() {
         return template -> {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication != null && authentication.getPrincipal() instanceof Jwt jwt) {
-                template.header("Authorization", "Bearer " + jwt.getTokenValue());
+            if (authentication != null && authentication.getCredentials() instanceof String token) {
+                template.header("Authorization", "Bearer " + token);
             }
         };
     }
