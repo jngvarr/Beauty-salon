@@ -7,8 +7,5 @@ WORKDIR /app
 # Копируем файлы сборки в контейнер
 COPY target/*.jar app.jar
 
-# Открываем порт
-EXPOSE 8081
-
 # Запуск приложения
 ENTRYPOINT ["java", "-jar", "app.jar"]
