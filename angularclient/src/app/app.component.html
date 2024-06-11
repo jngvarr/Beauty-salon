@@ -5,13 +5,16 @@
     <div class="col-md-12">
       <h1 class="text-white text-center pt-3 ">Beauty Salon</h1>
       <div class="buttons">
-        <button [hidden]="!logged" type="button" (click)="logout()"
-                class="btn btn-outline-light m-1 btn-sm">Logout
-        </button>
-        <button [hidden]="logged" type="button"  routerLink="login"
+        <!--        <li>-->
+        <div class="text-white" *ngIf="authService.isLoggedIn()">Welcome, {{ authService.getUsername() }}!
+          <button *ngIf="authService.isLoggedIn()" type="button" (click)="logout()"
+                  class="btn btn-outline-light m-1 btn-sm">Logout
+          </button>
+        </div>
+        <button *ngIf="!authService.isLoggedIn()" type="button" routerLink="login"
                 class="btn btn-outline-light m-1 btn-sm">Login
         </button>
-        <button [hidden]="logged" type="button" routerLink="registration"
+        <button *ngIf="!authService.isLoggedIn()" type="button" routerLink="registration"
                 class="btn btn-outline-light mr-2 btn-sm">
           Registration
         </button>
@@ -66,6 +69,7 @@
       <div id="opacity">
         <!--  <div id="background" [ngStyle]="{backgroundImage:'url('+ image +')'}">-->
         <router-outlet></router-outlet>
+<!--        <login></login>-->
       </div>
     </div>
 

@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {User} from "../../model/entities/user";
 import {ActivatedRoute, Router} from "@angular/router";
-import {RegistrationService} from "../../services/registration.service";
+import {AuthService} from "../../services/auth.service";
 import {NgForm} from "@angular/forms";
 
 @Component({
@@ -14,16 +14,15 @@ export class RegistrationFormComponent {
   confirmPassword: string = '';
 
   constructor(
-    private route: ActivatedRoute,
+    // private route: ActivatedRoute,
     private router: Router,
-    private registrationService: RegistrationService,
+    private authService: AuthService,
   ) {
   }
 
   onSubmit(form: NgForm) {
     if (form.valid && this.passwordsMatch()) {
       this.registration(this.user);
-
       console.log('Form Submitted!', this.user);
     } else {
       console.error('Form is invalid or passwords do not match');
@@ -39,8 +38,8 @@ export class RegistrationFormComponent {
     return this.user.password === this.confirmPassword;
   }
 
-  registration(user: User){
-    this.registrationService.save(user).subscribe(result => this.regSuccess());
+  registration(user: User) {
+    this.authService.save(user).subscribe(result => this.regSuccess());
   }
 
   emailFormatValid() {
