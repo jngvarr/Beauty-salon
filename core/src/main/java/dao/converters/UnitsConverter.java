@@ -5,6 +5,9 @@ import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
 import java.util.Arrays;
+/**
+ * Класс преобразования данных
+ */
 
 @Converter(autoApply = true)
 public class UnitsConverter implements AttributeConverter<Unit, String> {

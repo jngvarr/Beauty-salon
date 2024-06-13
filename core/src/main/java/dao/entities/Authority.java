@@ -17,9 +17,7 @@ public class Authority implements GrantedAuthority {
     String name;
 
     public Authority() {
-
     }
-
     public Authority(String name){
         this.name = name;
     }
@@ -27,5 +25,4 @@ public class Authority implements GrantedAuthority {
     public String getAuthority() {
         return name;
     }
-
 }

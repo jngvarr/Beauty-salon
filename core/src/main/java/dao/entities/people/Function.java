@@ -18,12 +18,9 @@ public enum Function {
     CLEANING("Уборщица"),
     TECH_ADMIN ("Системный администратор");
 
-
     private final String function;
 
     Function(String function) {
         this.function = function;
     }
-
-
 }

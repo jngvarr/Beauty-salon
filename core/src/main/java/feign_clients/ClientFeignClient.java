@@ -28,5 +28,4 @@ public interface ClientFeignClient {
 
     @GetMapping("/api/clients/clear")
     void clearAllData();
-
 }

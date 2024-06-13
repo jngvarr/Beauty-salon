@@ -9,6 +9,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import security.repositories.UserRepository;
 
+/**
+ * Реализация UserDetailsService
+ */
 @Service
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {

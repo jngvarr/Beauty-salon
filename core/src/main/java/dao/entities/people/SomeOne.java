@@ -4,6 +4,10 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDate;
+/**
+ *
+ */
+
 @Data
 @MappedSuperclass
 abstract class SomeOne {

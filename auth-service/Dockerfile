@@ -6,7 +6,7 @@ WORKDIR /app
 
 # Копируем файлы сборки в контейнер
 COPY target/*.jar app.jar
-COPY ./beauty_salon/core/target/core-0.0.1-SNAPSHOT.jar core.jar
+#COPY ../core/target/core-0.0.1-SNAPSHOT.jar core.jar
 
 
 # Открываем порт

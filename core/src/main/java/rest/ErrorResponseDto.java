@@ -9,10 +9,9 @@ import java.util.stream.Collectors;
 
 @Value
 public class ErrorResponseDto {
-    private final String message;
-    private final UUID uuid = UUID.randomUUID();
-
-    private final List<ErrorData> errors;
+    String message;
+    UUID uuid = UUID.randomUUID();
+    List<ErrorData> errors;
 
     public ErrorResponseDto(String code) {
         this(code, code);
@@ -32,7 +31,6 @@ public class ErrorResponseDto {
         message = compileMessage(this.errors);
     }
 
-
     private static String compileMessage(List<ErrorData> errors) {
         List<String> messages = errors.stream()
                 .map(ErrorData::getMessage)
@@ -44,7 +42,7 @@ public class ErrorResponseDto {
 
     @Value
     public static class ErrorData {
-        private final String code;
-        private final String message;
+        String code;
+        String message;
     }
 }
