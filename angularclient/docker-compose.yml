@@ -1,0 +1,10 @@
+#version: '3.8'
+#services:
+#  angular-client:
+#      build:
+#        context: angularclient
+#      container_name: angular-client
+#      ports:
+#        - "80:80"
+#      networks:
+#        - app-network
