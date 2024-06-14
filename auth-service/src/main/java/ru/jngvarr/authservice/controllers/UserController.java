@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -35,18 +36,13 @@ public class UserController {
     private final RefreshTokenService refreshTokenService;
     private final AuthService authService;
 
-    @GetMapping("/registration")
-    public String getHello() {
-        return "Привет от users";
-    }
-
-    //    @PreAuthorize("HAS_ROLE.TECH_ADMIN")
+    @PreAuthorize("hasAnyRole('TECH_ADMIN')")
     @GetMapping
     public List<User> getUsers() {
         log.debug("getUsers");
         return userService.getUsers();
     }
-
+    @PreAuthorize("hasAnyRole('TECH_ADMIN')")
     @GetMapping("/tokens")
     public List<RefreshToken> getTokens() {
         return refreshTokenService.getTokenRepository().findAll();
@@ -62,7 +58,6 @@ public class UserController {
         log.debug("user registration, id: {} ", user.getId());
         return userService.createUser(user);
     }
-
     @PostMapping("/login")
     public AuthenticationResponse createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest,
                                                             HttpServletResponse response) throws Exception {
@@ -84,7 +79,6 @@ public class UserController {
         userService.updateUserToken(user);
         return new AuthenticationResponse(accessToken);
     }
-
     @PostMapping("/refresh")
     public AuthenticationResponse refreshAuthenticationToken(HttpServletRequest request) {
         String refreshToken = extractTokenFromCookie(request);
@@ -92,7 +86,7 @@ public class UserController {
         if (refreshToken == null || refreshToken.isEmpty()) {
             throw new RuntimeException("Refresh token is missing");
         }
-        // Ищем токен в базе данных //TODO зачем?
+        // Ищем токен в базе данных //TODO доделать реализацию
         RefreshToken refreshTokenEntity = refreshTokenService.findByToken(refreshToken);
         if (refreshTokenEntity == null || refreshTokenEntity.getExpiryDate().isBefore(LocalDateTime.now())) {
             throw new RuntimeException("Invalid or expired refresh token");
@@ -112,7 +106,7 @@ public class UserController {
     @PostMapping("/logout")
     public void logout(@RequestBody String request) {
         String username = jwtUtil.extractUsername(jwtUtil.extractAllClaims(request));
-            userService.logoutByUsername(username);
+        userService.logoutByUsername(username);
 //        public void logout (HttpServletRequest request){
 //            String authHeader = request.getHeader("Authorization");
 //            if (authHeader != null && authHeader.startsWith("Bearer ")) {
@@ -135,5 +129,6 @@ public class UserController {
         return null;
     }
 
-//    @Secured("ROLE_TECH_ADMIN") public void addRoleAdmin() {}
+//    @Secured("ROLE_TECH_ADMIN") public void addRoleAdmin() {
+//    }
 }
