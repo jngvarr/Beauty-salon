@@ -1,6 +1,7 @@
 package ru.jngvarr.clientmanagement.controllers;
 
 import dao.entities.people.Client;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -16,29 +17,27 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/clients")
-//@CrossOrigin() //Политика CORS определяет, какие домены могут обращаться к ресурсам сервера
 public class ClientController {
     private final ClientService clientService;
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping
-    public ResponseEntity<List<Client>> showAll(@RequestHeader Map<String, String> headers) {
+    public List<Client> showAll(@RequestHeader Map<String, String> headers) {
         headers.forEach((key, value) -> {
             System.out.printf("Header '%s' = %s%n", key, value);
         });
-        return ResponseEntity.ok().body(clientService.getClients());
+        return clientService.getClients();
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/clear")
-    public ResponseEntity<Void> clearAllData() {
+    public void clearAllData() {
         clientService.clearAllData();
-        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Client> getClient(@PathVariable Long id) {
-        return new ResponseEntity<>(clientService.getClient(id), HttpStatus.OK);
+    public Client getClient(@PathVariable Long id) {
+        return clientService.getClient(id);
     }
 
     @GetMapping("/by-contact/{phoneNumber}")
@@ -61,7 +60,7 @@ public class ClientController {
     @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/create")
-    public Client createClient(@RequestBody Client newClient) {
+    public Client createClient(@Valid @RequestBody Client newClient) {
         log.debug("create-client {}", newClient);
         return clientService.addClient(newClient);
     }
@@ -72,6 +71,7 @@ public class ClientController {
         return clientService.update(newClient, id);
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete/{id}")
     public void deleteClient(@PathVariable Long id) {

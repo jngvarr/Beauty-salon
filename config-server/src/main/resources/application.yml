@@ -9,5 +9,7 @@ spring:
           default-label: main
           #          basedir: c:\..\gb\springConfig\
           basedir: .\gb\salonConfig\
+#        native: означает что размещение конфигурации локальное там же где и instance.spring cloud.config
+          search-locations: file://${user.home}/C:/Users/jngva/gb/Beauty-salon/config #где искать файлы конфигурации
 server:
   port: 8888

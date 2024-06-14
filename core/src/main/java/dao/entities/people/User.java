@@ -3,6 +3,9 @@ package dao.entities.people;
 import dao.entities.Authority;
 import dao.entities.RefreshToken;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.GrantedAuthority;
@@ -23,12 +26,14 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @NoArgsConstructor(force = true)
 public class User extends SomeOne implements UserDetails {
-
+    //   @NotEmpty
     @Column(name = "user_name")
     private String username;
+    //    @Size(min = 8, message = "Password must be at least 6 characters long")
     @Setter
     @Column(name = "password")
     private String password;
+    //   @Email
     @Column(name = "email")
     private final String email;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

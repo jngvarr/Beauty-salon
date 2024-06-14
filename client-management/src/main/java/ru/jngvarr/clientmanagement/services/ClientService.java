@@ -45,16 +45,16 @@ public class ClientService {
     }
 
     public Client update(Client newData, Long id) {
-        Optional<Client> oldClient = clientsRepository.findById(id);
-        if (oldClient.isPresent()) {
-            Client newClient = oldClient.get();
-            if (newData.getDob() != null) newClient.setDob(newData.getDob());
-            if (newData.getContact() != null) newClient.setContact(newData.getContact());
-            if (newData.getFirstName() != null) newClient.setFirstName(newData.getFirstName());
-            if (newData.getLastName() != null) newClient.setLastName(newData.getLastName());
-            return clientsRepository.save(newClient);
-        } else throw new IllegalArgumentException("Client not found");
+        return clientsRepository.findById(id).map(client -> {
+            if (newData.getDob() != null) client.setDob(newData.getDob());
+            if (newData.getContact() != null) client.setContact(newData.getContact());
+            if (newData.getFirstName() != null) client.setFirstName(newData.getFirstName());
+            if (newData.getLastName() != null) client.setLastName(newData.getLastName());
+            return clientsRepository.save(client);
+        }).orElseThrow(() -> new IllegalArgumentException("Client not found"));
+
     }
+
 
     public void deleteClient(Long id) {
         clientsRepository.deleteById(id);
