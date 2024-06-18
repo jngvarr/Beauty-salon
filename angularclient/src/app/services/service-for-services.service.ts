@@ -40,6 +40,6 @@ export class ServiceForServices {
   }
 
   findByConsumable(value: string) {
-    return this.http.get<Consumable[]>(this.servicesUrl + `/byConsumable/${Consumable}`);
+    return this.http.get<Consumable[]>(this.servicesUrl + `/byConsumable/${value}`);
   }
 }

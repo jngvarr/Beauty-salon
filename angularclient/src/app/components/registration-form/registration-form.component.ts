@@ -29,11 +29,9 @@ export class RegistrationFormComponent {
       this.router.navigate(['redirect/registration']);
     }
   }
-
   gotoUserList() {
     this.router.navigate(['/users']);
   }
-
   passwordsMatch(): boolean {
     return this.user.password === this.confirmPassword;
   }
@@ -41,11 +39,9 @@ export class RegistrationFormComponent {
   registration(user: User) {
     this.authService.save(user).subscribe(result => this.regSuccess());
   }
-
   emailFormatValid() {
     return this.user.email?.includes("@") && this.user.email?.includes(".");
   }
-
   private regSuccess() {
     this.router.navigate(['/login']);
   }

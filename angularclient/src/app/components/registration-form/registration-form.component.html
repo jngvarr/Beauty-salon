@@ -40,7 +40,8 @@
                name="confirmPassword"
                placeholder="Confirm password"
                minlength="8"
-               [ngClass]="{'has-error': confirmPasswordField.dirty && confirmPasswordField.invalid || (registrationForm.submitted && !passwordsMatch())}"
+               [ngClass]="{'has-error': confirmPasswordField.dirty && confirmPasswordField.invalid
+               || (registrationForm.submitted && !passwordsMatch())}"
                required #confirmPasswordField="ngModel">
         <div *ngIf="registrationForm.submitted && !passwordsMatch()" class="alert alert-danger">
           Passwords do not match.

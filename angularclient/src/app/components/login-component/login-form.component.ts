@@ -6,7 +6,6 @@ import {User} from "../../model/entities/user";
 import {ApiService} from "../../services/api-service";
 import {AuthService} from "../../services/auth.service";
 
-
 @Component({
   selector: 'login',
   templateUrl: './login-form.component.html',

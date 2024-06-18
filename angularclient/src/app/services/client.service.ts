@@ -6,13 +6,11 @@ import {ApiService} from "./api-service";
 
 @Injectable()
 export class ClientService {
-
   private clientsUrl: string;
 
   constructor(private http: HttpClient, private apiService: ApiService) {
     this.clientsUrl = this.apiService.apiUrl + '/clients';
   }
-
   public findAll(): Observable<Client[]> {
     return this.http.get<Client[]>(this.clientsUrl);
   }
