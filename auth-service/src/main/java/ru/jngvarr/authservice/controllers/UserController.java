@@ -1,7 +1,7 @@
 package ru.jngvarr.authservice.controllers;
 
 import dao.entities.RefreshToken;
-import dao.entities.people.User;
+import dao.entities.people.salonUser;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -38,7 +38,7 @@ public class UserController {
 
     @PreAuthorize("hasAnyRole('TECH_ADMIN')")
     @GetMapping
-    public List<User> getUsers() {
+    public List<salonUser> getUsers() {
         log.debug("getUsers");
         return userService.getUsers();
     }
@@ -49,14 +49,14 @@ public class UserController {
     }
 
     @GetMapping("/byEmail/{email}")
-    public User getUserByEmail(@PathVariable String email) {
+    public salonUser getUserByEmail(@PathVariable String email) {
         return userService.getUserByEmail(email);
     }
 
     @PostMapping("/registration")
-    public User userRegistration(@RequestBody User user) {
-        log.debug("user registration, id: {} ", user.getId());
-        return userService.createUser(user);
+    public salonUser userRegistration(@RequestBody salonUser salonUser) {
+        log.debug("user registration, id: {} ", salonUser.getId());
+        return userService.createUser(salonUser);
     }
     @PostMapping("/login")
     public AuthenticationResponse createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest,
@@ -67,16 +67,16 @@ public class UserController {
             throw new Exception("Incorrect username or password", e);
         }
 
-        User user = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+        salonUser salonUser = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
         // Создание токена доступа
-        String accessToken = jwtUtil.generateToken(user, true);
+        String accessToken = jwtUtil.generateToken(salonUser, true);
         // Создание токена обновления
-        String refreshToken = jwtUtil.generateToken(user, false);
+        String refreshToken = jwtUtil.generateToken(salonUser, false);
         Claims claims = jwtUtil.extractAllClaims(refreshToken);
         // Сохранение refresh token в базе данных
         RefreshToken rf = refreshTokenService.saveRefreshToken(refreshToken, claims);
-        user.getTokens().add(rf);
-        userService.updateUserToken(user);
+        salonUser.getTokens().add(rf);
+        userService.updateUserToken(salonUser);
         return new AuthenticationResponse(accessToken);
     }
     @PostMapping("/refresh")

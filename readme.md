@@ -29,7 +29,7 @@
 p.s. 
 БД можно развернуть:
 * в контейнере Docker при помощи команды:
-docker run --name salon-16.1 -p 5432:5432 -e POSTGRES_USER=user -e POSTGRES_PASSWORD=pass -e POSTGRES_DB=salondb -d postgres:16.1
+docker run --name salon-16.1 -p 5432:5432 -e POSTGRES_USER=salonUser -e POSTGRES_PASSWORD=pass -e POSTGRES_DB=salondb -d postgres:16.1
 * при помощи ПО pgAdmin
 
 

@@ -3,19 +3,13 @@ package dao.entities.people;
 import dao.entities.Authority;
 import dao.entities.RefreshToken;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
 import lombok.*;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
 //@EqualsAndHashCode(callSuper = true)
 
@@ -25,7 +19,7 @@ import java.util.Objects;
 @EqualsAndHashCode(callSuper = true)
 @RequiredArgsConstructor
 @NoArgsConstructor(force = true)
-public class User extends SomeOne implements UserDetails {
+public class salonUser extends SomeOne implements UserDetails {
     //   @NotEmpty
     @Column(name = "user_name")
     private String username;

@@ -43,7 +43,6 @@ public class ClientController {
     @GetMapping("/by-contact/{phoneNumber}")
     public List<Client> getClientByPhone(@PathVariable String phoneNumber) {
         log.debug("number={}", phoneNumber);
-
         return clientService.getClientByContact(phoneNumber);
     }
 
