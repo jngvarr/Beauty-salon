@@ -22,7 +22,6 @@ export class ServiceFormComponent implements OnInit {
     private serviceService: ServiceForServices,
     private storageService: StorageService
   ) {}
-
   ngOnInit(): void {
     // Выполнение запроса к сервису для получения данных о расходных материалах
     this.storageService.findAll().subscribe(
@@ -43,7 +42,6 @@ export class ServiceFormComponent implements OnInit {
       }
     });
   }
-
   onSubmit() {
     this.service.consumables = this.selectedConsumables;
     this.serviceService.save(this.service).subscribe(result => this.gotoServiceList());

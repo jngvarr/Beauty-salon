@@ -43,33 +43,20 @@ export class ApptListComponent implements OnInit {
         console.error('Error fetching masters:', error);
       });
   }
-
   ngOnInit() {
     this.loadAppts();
   }
-
   loadAppts() {
     this.apptService.findAll().subscribe(data => {
       this.appts = data;
     });
   }
-
   searchByVisitDate(date: Date) {
     this.apptService.findByDate(date).subscribe((data: Visit[]) => {
       this.appts = data;
       this.isSearching = true;
     });
   }
-
-  // searchByTime(time: Time) {
-  //   this.apptService.findByStartTime(time).subscribe((data: Visit[]) => {
-  //     this.appts = data;
-  //     this.isSearching = true;
-  //   });
-  // }
-
-
-
   deleteAppt(appt: Visit) {
     if (confirm('Вы уверены, что хотите удалить запись?')) {
       this.apptService.delete(appt.id).subscribe(() => {
@@ -77,7 +64,6 @@ export class ApptListComponent implements OnInit {
       });
     }
   }
-
   resetSearch() {
     this.isSearching = false;
     this.loadAppts();
@@ -93,14 +79,12 @@ export class ApptListComponent implements OnInit {
       this.appts = data;
     });
   }
-
   searchByClient(value: string) {
     this.isSearching = true;
     this.apptService.findByClient(value).subscribe((data: Visit[]) => {
       this.appts = data;
     });
   }
-
   searchByMaster(value: number) {
     this.isSearching = true;
     this.apptService.findByMaster(value).subscribe((data: Visit[]) => {

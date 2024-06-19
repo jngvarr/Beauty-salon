@@ -57,7 +57,6 @@ export class ApptFormComponent implements OnInit {
   }
 
   ngOnInit() {
-
     this.route.params.subscribe(params => {
       const serviceId = params['id'];
       if (serviceId) {
@@ -69,16 +68,10 @@ export class ApptFormComponent implements OnInit {
           this.service = this.appt.service;
           this.master = this.appt.master;
 
-          // // Установка значения master
-          // this.appt.master = data.master;
-          //
-          // // Установка значения service
-          // this.appt.service = data.service;
         });
       }
     });
   }
-
   onSubmit() {
     this.appt.client = this.client;
     this.appt.master = this.master;
@@ -90,19 +83,15 @@ export class ApptFormComponent implements OnInit {
       this.updateAppointment(this.appt);
     }
   }
-
   private saveAppointment(appt: Visit) {
     this.apptService.save(appt).subscribe(result => this.gotoAppointmentList());
   }
-
   private updateAppointment(appt: Visit) {
     this.apptService.update(appt).subscribe(result => this.gotoAppointmentList());
   }
-
   gotoAppointmentList() {
     this.router.navigate(['/visits']);
   }
-
   deleteAppt(apptId: number | undefined) {
     this.apptService.delete(apptId).subscribe(() => {
       this.gotoAppointmentList();
