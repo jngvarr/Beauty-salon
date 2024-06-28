@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {ApiService} from "./api-service";
-import {User} from "../model/entities/user";
+import {salonUser} from "../model/entities/salonUser";
 
 @Injectable({
   providedIn: 'root'})
@@ -13,8 +13,8 @@ export class AuthService {
               private http: HttpClient,
               public apiService: ApiService) {
   }
-  save(user: User) {
-    return this.http.post<User>(this.apiService.apiUrl + "/users/registration", user);
+  save(user: salonUser) {
+    return this.http.post<salonUser>(this.apiService.apiUrl + "/users/registration", user);
   }
   login(username: string | undefined, token: string) {
     if (typeof sessionStorage !== 'undefined') {

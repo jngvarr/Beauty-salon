@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {User} from "../../model/entities/user";
+import {salonUser} from "../../model/entities/salonUser";
 import {ActivatedRoute, Router} from "@angular/router";
 import {AuthService} from "../../services/auth.service";
 import {NgForm} from "@angular/forms";
@@ -10,7 +10,7 @@ import {NgForm} from "@angular/forms";
   styleUrl: './registration-form.component.scss'
 })
 export class RegistrationFormComponent {
-  user: User = new User();
+  user: salonUser = new salonUser();
   confirmPassword: string = '';
 
   constructor(
@@ -36,7 +36,7 @@ export class RegistrationFormComponent {
     return this.user.password === this.confirmPassword;
   }
 
-  registration(user: User) {
+  registration(user: salonUser) {
     this.authService.save(user).subscribe(result => this.regSuccess());
   }
   emailFormatValid() {

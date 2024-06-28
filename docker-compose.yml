@@ -8,6 +8,12 @@ services:
       - "8761:8761"
     networks:
       - app-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=default
+#      - SPRING_CONFIG_IMPORT=config-server:http://config-server:8888
+      - SPRING_CONFIG_IMPORT=config-server:http://host.docker.internal:8888
+    depends_on:
+      - config-server
 
   config-server:
     build:
@@ -17,11 +23,21 @@ services:
       - "8888:8888"
     networks:
       - app-network
-#    extra_hosts:
-#      - "host.docker.internal:host-gateway"
+
+  angular-client:
+    build:
+      context: angularclient
+    image: angular-client-image
+    container_name: angular-client
+    ports:
+      - "4200:4200"
+      - "80:80"
+    networks:
+      - app-network
 
 networks:
   app-network:
+    driver: bridge
 
 #  api-gateway:
 #    build:
@@ -136,6 +152,7 @@ networks:
 #    depends_on:
 #      - eureka
 #      - config-server
+
 #
 #networks:
 #  app-network:

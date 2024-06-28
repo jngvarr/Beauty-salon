@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {catchError, map} from 'rxjs/operators';
 import {of} from 'rxjs';
-import {User} from "../../model/entities/user";
+import {salonUser} from "../../model/entities/salonUser";
 import {ApiService} from "../../services/api-service";
 import {AuthService} from "../../services/auth.service";
 
@@ -12,7 +12,7 @@ import {AuthService} from "../../services/auth.service";
   styleUrl: './login-form.component.scss'
 })
 export class LoginFormComponent {
-  user: User = new User();
+  user: salonUser = new salonUser();
   loading: boolean = false;
   apiUrl: string = this.apiService.apiUrl + '/users/login';
 
