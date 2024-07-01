@@ -1,15 +1,15 @@
 spring:
   application:
-    name: config-server
+    name: configserver
   cloud:
     config:
       server:
         git:
           uri: https://github.com/jngvarr/SalonConfig.git
           default-label: main
+server:
+  port: 8888
           #          basedir: c:\..\gb\springConfig\
 #          basedir: .\gb\salonConfig\
 #        native: означает что размещение конфигурации локальное там же где и instance.spring cloud.config
 #          search-locations: file://${user.home}/C:/Users/jngva/gb/Beauty-salon/config #где искать файлы конфигурации
-server:
-  port: 8888

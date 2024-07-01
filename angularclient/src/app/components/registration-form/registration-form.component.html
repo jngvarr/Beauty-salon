@@ -5,7 +5,7 @@
     <form (ngSubmit)="onSubmit(registrationForm)" #registrationForm="ngForm">
       <div class="form-group">
         <label for="username">Username<span class="required-field">*</span></label>
-        <input type="text" [(ngModel)]="salonUser.username"
+        <input type="text" [(ngModel)]="user.username"
                class="form-control"
                id="username"
                name="username"
@@ -19,7 +19,7 @@
 
       <div class="form-group">
         <label for="password">Password<span class="required-field">*</span></label>
-        <input type="password" [(ngModel)]="salonUser.password"
+        <input type="password" [(ngModel)]="user.password"
                class="form-control"
                id="password"
                name="password"
@@ -50,7 +50,7 @@
 
       <div class="form-group">
         <label for="email">E-mail<span class="required-field">*</span></label>
-        <input type="email" [(ngModel)]="salonUser.email"
+        <input type="email" [(ngModel)]="user.email"
                class="form-control"
                id="email"
                name="email"
@@ -63,7 +63,7 @@
 
       <div class="form-group">
         <label for="firstname">First name</label>
-        <input type="text" [(ngModel)]="salonUser.firstName"
+        <input type="text" [(ngModel)]="user.firstName"
                class="form-control"
                id="firstname"
                name="firstname"
@@ -74,7 +74,7 @@
 
       <div class="form-group">
         <label for="lastName">Lastname</label>
-        <input type="text" [(ngModel)]="salonUser.lastName"
+        <input type="text" [(ngModel)]="user.lastName"
                class="form-control"
                id="lastName"
                name="lastName"
@@ -85,7 +85,7 @@
 
       <div class="form-group">
         <label for="salonUser-contact">Phone number<span class="required-field">*</span></label>
-        <input type="text" [(ngModel)]="salonUser.contact"
+        <input type="text" [(ngModel)]="user.contact"
                class="form-control"
                id="salonUser-contact"
                name="salonUser-contact"
@@ -98,7 +98,7 @@
 
       <div class="form-group">
         <label for="salonUser-dob">Date of birth</label>
-        <input type="datetime-local" [(ngModel)]="salonUser.dob"
+        <input type="datetime-local" [(ngModel)]="user.dob"
                class="form-control"
                id="salonUser-dob"
                name="salonUser-dob"

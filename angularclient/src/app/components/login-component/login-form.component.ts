@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient} from '@angular/common/http';
 import {catchError, map} from 'rxjs/operators';
 import {of} from 'rxjs';
 import {salonUser} from "../../model/entities/salonUser";
@@ -61,5 +61,7 @@ export class LoginFormComponent {
       }
     });
   }
+
+  protected readonly salonUser = salonUser;
 }
 

@@ -2,9 +2,11 @@
 services:
   angular-client:
       build:
-        context: angularclient
+        context: .
       container_name: angular-client
       ports:
         - "80:80"
       networks:
         - app-network
+networks:
+  app-network:

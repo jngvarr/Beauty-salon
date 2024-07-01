@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {salonUser} from "../../model/entities/salonUser";
-import {ActivatedRoute, Router} from "@angular/router";
+import {Router} from "@angular/router";
 import {AuthService} from "../../services/auth.service";
 import {NgForm} from "@angular/forms";
 
@@ -45,4 +45,6 @@ export class RegistrationFormComponent {
   private regSuccess() {
     this.router.navigate(['/login']);
   }
+
+  protected readonly salonUser = salonUser;
 }
