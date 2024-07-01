@@ -19,7 +19,8 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @RequiredArgsConstructor
 @NoArgsConstructor(force = true)
-public class salonUser extends SomeOne implements UserDetails {
+public class SalonUser extends SomeOne implements UserDetails {
+
     //   @NotEmpty
     @Column(name = "user_name")
     private String username;
@@ -30,11 +31,13 @@ public class salonUser extends SomeOne implements UserDetails {
     //   @Email
     @Column(name = "email")
     private final String email;
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "user_to_authorities",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "authority_id"))
     List<Authority> authorities = new ArrayList<>();
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "user_to_tokens",
             joinColumns = @JoinColumn(name = "user_id"),

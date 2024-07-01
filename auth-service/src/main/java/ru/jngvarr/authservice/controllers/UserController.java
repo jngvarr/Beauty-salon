@@ -1,7 +1,7 @@
 package ru.jngvarr.authservice.controllers;
 
 import dao.entities.RefreshToken;
-import dao.entities.people.salonUser;
+import dao.entities.people.SalonUser;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,25 +36,25 @@ public class UserController {
     private final RefreshTokenService refreshTokenService;
     private final AuthService authService;
 
-    @PreAuthorize("hasAnyRole('TECH_ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @GetMapping
-    public List<salonUser> getUsers() {
+    public List<SalonUser> getUsers() {
         log.debug("getUsers");
         return userService.getUsers();
     }
-    @PreAuthorize("hasAnyRole('TECH_ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @GetMapping("/tokens")
     public List<RefreshToken> getTokens() {
         return refreshTokenService.getTokenRepository().findAll();
     }
 
     @GetMapping("/byEmail/{email}")
-    public salonUser getUserByEmail(@PathVariable String email) {
+    public SalonUser getUserByEmail(@PathVariable String email) {
         return userService.getUserByEmail(email);
     }
 
     @PostMapping("/registration")
-    public salonUser userRegistration(@RequestBody salonUser salonUser) {
+    public SalonUser userRegistration(@RequestBody SalonUser salonUser) {
         log.debug("user registration, id: {} ", salonUser.getId());
         return userService.createUser(salonUser);
     }
@@ -67,7 +67,7 @@ public class UserController {
             throw new Exception("Incorrect username or password", e);
         }
 
-        salonUser salonUser = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+        SalonUser salonUser = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
         // Создание токена доступа
         String accessToken = jwtUtil.generateToken(salonUser, true);
         // Создание токена обновления

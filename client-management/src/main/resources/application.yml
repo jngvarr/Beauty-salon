@@ -30,10 +30,10 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
   datasource:
-#    url: jdbc:postgresql://147.45.102.248:5432/salondb
-    url: jdbc:postgresql://localhost:5432/salondb
+    url: jdbc:postgresql://147.45.102.248:5432/salondb
+#    url: jdbc:postgresql://localhost:5432/salondb
     username: user
-    password: pass
+    password: passw
     hikari:
       schema: salon
       maximum-pool-size: 2
@@ -41,11 +41,11 @@ spring:
   sql:
     init:
       mode: always
-  flyway:
-    locations: classpath:db/migration
-    schemas:
-      - salon
-    validateMigrationNaming: true
+#  flyway:
+#    locations: classpath:db/migration
+#    schemas:
+#      - salon
+#    validateMigrationNaming: true
 logging:
   level:
     ru.jngvarr: DEBUG
