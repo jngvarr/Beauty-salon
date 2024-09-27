@@ -129,6 +129,7 @@ public class UserController {
         return null;
     }
 
-//    @Secured("ROLE_TECH_ADMIN") public void addRoleAdmin() {
-//    }
+    public SalonUser setUserAuthority(Long id) {
+        return null;
+    }
 }

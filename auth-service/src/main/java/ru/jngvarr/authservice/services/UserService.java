@@ -41,6 +41,7 @@ public class UserService {
         boolean userExists = userRepository.existsByUsernameOrEmail(salonUser.getUsername(), salonUser.getEmail());
         if (!userExists) {
             if (authorityRepository.count() == 0) {
+                authorityRepository.save(new Authority("ROLE_ADMIN"));
                 authorityRepository.save(new Authority("ROLE_USER"));
             }
             salonUser.setAuthorities(authorityRepository.getAuthorityByName("ROLE_USER"));
