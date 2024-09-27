@@ -43,6 +43,7 @@ public class UserService {
             if (authorityRepository.count() == 0) {
                 authorityRepository.save(new Authority("ROLE_ADMIN"));
                 authorityRepository.save(new Authority("ROLE_USER"));
+                salonUser.setAuthorities(authorityRepository.getAuthorityByName("ROLE_ADMIN"));
             }
             salonUser.setAuthorities(authorityRepository.getAuthorityByName("ROLE_USER"));
             salonUser.setPassword(passwordEncoder.encode(salonUser.getPassword()));
