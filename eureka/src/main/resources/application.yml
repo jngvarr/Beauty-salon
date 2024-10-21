@@ -5,8 +5,8 @@ spring:
     name: eserver
   config:
 #    import: configserver:http://configserver:8888
-    import: configserver:http://host.docker.internal:8888
-#    import: configserver:http://localhost:8888
+#    import: configserver:http://host.docker.internal:8888
+    import: configserver:http://localhost:8888
   profiles:
     active: default
 

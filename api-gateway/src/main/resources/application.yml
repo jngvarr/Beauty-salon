@@ -7,8 +7,8 @@ spring:
   profiles:
     active: eclient
   config:
-#    import: configserver:http://localhost:8888
-    import: configserver:http://host.docker.internal:8888
+    import: configserver:http://localhost:8888
+#    import: configserver:http://host.docker.internal:8888
 #    main:
 #      web-application-type:
 #        reactive
