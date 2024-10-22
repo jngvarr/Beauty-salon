@@ -86,7 +86,7 @@ public class UserController {
         RefreshToken rf = refreshTokenService.saveRefreshToken(refreshToken, claims);
         salonUser.getTokens().add(rf);
         userService.updateUserToken(salonUser);
-        return new AuthenticationResponse(accessToken);
+        return new AuthenticationResponse(accessToken, refreshToken);
     }
 
     @PostMapping("/refresh")
@@ -106,7 +106,7 @@ public class UserController {
             String username = jwtUtil.extractUsername(claims);
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
             String newAccessToken = jwtUtil.generateToken(userDetails, true);
-            return new AuthenticationResponse(newAccessToken);
+            return new AuthenticationResponse(newAccessToken, null);
         } else {
             throw new RuntimeException("Invalid refresh token");
         }

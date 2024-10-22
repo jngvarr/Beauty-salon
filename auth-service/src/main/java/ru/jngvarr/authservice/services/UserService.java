@@ -44,7 +44,7 @@ public class UserService {
                 RuntimeException("Such user already exists");
     }
 
-    public void initialize() {
+    private void initialize() {
         authorityRepository.save(new Authority("ROLE_ADMIN"));
         authorityRepository.save(new Authority("ROLE_USER"));
         SalonUser admin = new SalonUser();
@@ -67,9 +67,6 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public List<Authority> getAuthorities() {
-        return authorityRepository.findAll();
-    }
 
     public SalonUser getUserByEmail(String email) {
         return userRepository.getUserByEmail(email);
@@ -77,6 +74,10 @@ public class UserService {
 
     public SalonUser getUserByContact(String email) {
         return userRepository.getUserByEmail(email);
+    }
+
+    public List<Authority> getAuthorities() {
+        return authorityRepository.findAll();
     }
 
     public void logoutByUsername(String username) {

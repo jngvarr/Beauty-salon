@@ -24,8 +24,8 @@ export class LoginFormComponent {
   }
 
   ngOnInit() {
-    if (sessionStorage.getItem('token')) {
-      sessionStorage.setItem('token', '');
+    if (sessionStorage.getItem('accessToken')) {
+      sessionStorage.setItem('accessToken', '');
     }
   }
 
@@ -49,10 +49,10 @@ export class LoginFormComponent {
         console.error('Login failed', error);
         return of(null);
       })
-    ).subscribe(token => {
-      if (token) {
+    ).subscribe(accessToken => {
+      if (accessToken) {
         if (this.user.username) {
-          this.authService.login(this.user.username, token);
+          this.authService.login(this.user.username, accessToken);
         } else {
           console.error("Username is undefined");
         }
