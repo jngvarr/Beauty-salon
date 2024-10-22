@@ -17,39 +17,45 @@ import java.util.List;
 public class StaffController {
     private final StaffService staffService;
 
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERUSER')")
     @GetMapping
     public List<Employee> getEmployees() {
 //        log.debug("getEmployees {}", staffService.getEmployees());
         return staffService.getEmployees();
     }
-    @PreAuthorize("isAuthenticated()")
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERUSER')")
     @GetMapping("/{id}")
     public Employee getEmployee(@PathVariable Long id) {
         return staffService.getEmployee(id);
     }
-    @PreAuthorize("isAuthenticated()")
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_USER')")
     @GetMapping("/by-phone/{phoneNumber}")
     public Employee getEmployeeByPhone(@PathVariable String phoneNumber) {
         return staffService.getEmployeeByPhone(phoneNumber);
     }
-    @PreAuthorize("hasRole('ADMIN')")
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_USER')")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/create")
     public Employee createEmployee(@RequestBody Employee employee) {
         return staffService.addEmployee(employee);
     }
-    @PreAuthorize("hasRole('ADMIN')")
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_USER')")
     @PutMapping("/update/{id}")
     public Employee updateEmployee(@RequestBody Employee newData, @PathVariable Long id) {
         return staffService.updateEmployee(newData, id);
     }
+
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete/{id}")
     public void deleteEmployee(@PathVariable Long id) {
         staffService.delete(id);
     }
-    @PreAuthorize("isAuthenticated()")
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_USER')")
     @GetMapping("/by-name")
     public List<Employee> getEmployeesByName(
             @RequestParam(name = "name", required = false) String name,
@@ -59,14 +65,15 @@ public class StaffController {
                 (name.isEmpty() ? staffService.getEmployeesByLastName(lastName) : staffService.getEmployeesByName(name)) :
                 staffService.getEmployeesByFullName(name, lastName);
     }
-    @PreAuthorize("isAuthenticated()")
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_USER')")
     @GetMapping("/by-contact/{phoneNumber}")
     public List<Employee> getEmployeesByPhone(@PathVariable String phoneNumber) {
         log.debug("number={}", phoneNumber);
         return staffService.getEmployeeByContact(phoneNumber);
     }
 
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_USER')")
     @GetMapping("/by-function/{function}")
     public List<Employee> getEmployeeByFunction(@PathVariable String function) {
         log.debug("number={}", function);

@@ -14,6 +14,7 @@ import security.UserDetailsServiceImpl;
 import security.repositories.UserRepository;
 
 import java.util.List;
+import java.util.function.ToDoubleBiFunction;
 
 @Service
 @Log4j2
@@ -25,14 +26,6 @@ public class UserService {
     private final StaffFeignClient staffFeignClient;
     private final UserDetailsServiceImpl userDetailsService;
 
-    public boolean getClientByUserContact(SalonUser salonUser) {
-        Employee employee = staffFeignClient.getEmployeeByPhone(salonUser.getContact());
-        return employee != null && employee.getContact().equals(salonUser.getContact());
-    }
-
-    public SalonUser getUserByEmail(String email) {
-        return userRepository.getUserByEmail(email);
-    }
 
     @Transactional
     public SalonUser createUser(SalonUser salonUser) {
@@ -78,10 +71,24 @@ public class UserService {
         return authorityRepository.findAll();
     }
 
+    public SalonUser getUserByEmail(String email) {
+        return userRepository.getUserByEmail(email);
+    }
+
+    public SalonUser getUserByContact(String email) {
+        return userRepository.getUserByEmail(email);
+    }
+
     public void logoutByUsername(String username) {
         SalonUser toLogout = userDetailsService.loadUserByUsername(username);
         toLogout.getTokens().clear();
         userRepository.save(toLogout);
+    }
+
+    //TODO поиск работника по контакту пользователя (является ли он работником) надо или нет???
+    public boolean getUserByContact(SalonUser salonUser) {
+        Employee employee = staffFeignClient.getEmployeeByPhone(salonUser.getContact());
+        return employee != null && employee.getContact().equals(salonUser.getContact());
     }
 }
 

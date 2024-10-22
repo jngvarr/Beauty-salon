@@ -3,6 +3,8 @@ package ru.jngvarr.authservice.services;
 import dao.entities.RefreshToken;
 import exceptions.NeededObjectNotFound;
 import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -66,5 +68,18 @@ public class RefreshTokenService {
     @Scheduled(cron = "@daily") // Запускать ежедневно
     public void removeExpiredTokens() {
         tokenRepository.deleteAllExpiredSince(Instant.now());
+    }
+
+
+    public String extractTokenFromCookie(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("refreshToken".equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
+        }
+        return null;
     }
 }

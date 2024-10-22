@@ -20,7 +20,7 @@ export class AuthService {
     if (typeof sessionStorage !== 'undefined') {
       sessionStorage.setItem('token', token);
     } else {
-      alert("1Authentication failed. Please check your username and password.");
+      alert("Authentication failed. Please check your username and password.");
     }
     this.logged = true;
     this.username = username;

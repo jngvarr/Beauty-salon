@@ -39,18 +39,26 @@ public class UserController {
     @PreAuthorize("hasAnyRole('ADMIN')")
     @GetMapping
     public List<SalonUser> getUsers() {
-        log.debug("getUsers");
+        log.debug("/getUsers");
         return userService.getUsers();
     }
+
     @PreAuthorize("hasAnyRole('ADMIN')")
     @GetMapping("/tokens")
     public List<RefreshToken> getTokens() {
         return refreshTokenService.getTokenRepository().findAll();
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @GetMapping("/byEmail/{email}")
     public SalonUser getUserByEmail(@PathVariable String email) {
         return userService.getUserByEmail(email);
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @GetMapping("/byEmail/{contact}")
+    public SalonUser getUserByContact(@PathVariable String contact) {
+        return userService.getUserByEmail(contact);
     }
 
     @PostMapping("/registration")
@@ -58,6 +66,7 @@ public class UserController {
         log.debug("user registration, id: {} ", salonUser.getId());
         return userService.createUser(salonUser);
     }
+
     @PostMapping("/login")
     public AuthenticationResponse createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest,
                                                             HttpServletResponse response) throws Exception {
@@ -79,9 +88,10 @@ public class UserController {
         userService.updateUserToken(salonUser);
         return new AuthenticationResponse(accessToken);
     }
+
     @PostMapping("/refresh")
     public AuthenticationResponse refreshAuthenticationToken(HttpServletRequest request) {
-        String refreshToken = extractTokenFromCookie(request);
+        String refreshToken = refreshTokenService.extractTokenFromCookie(request);
         Claims claims = jwtUtil.extractAllClaims(refreshToken);
         if (refreshToken == null || refreshToken.isEmpty()) {
             throw new RuntimeException("Refresh token is missing");
@@ -115,18 +125,6 @@ public class UserController {
 //                userService.logoutByUsername(username);
 //            } else throw new RuntimeException("Wrong request");
 //        }
-    }
-
-    private String extractTokenFromCookie(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if ("refreshToken".equals(cookie.getName())) {
-                    return cookie.getValue();
-                }
-            }
-        }
-        return null;
     }
 
     public SalonUser setUserAuthority(Long id) {
