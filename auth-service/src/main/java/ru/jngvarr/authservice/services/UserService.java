@@ -39,16 +39,28 @@ public class UserService {
 //        if (userRepository.findAll().stream()
 //                .noneMatch(u -> u.getUsername().equals(user.getUsername()) || u.getEmail().equals(user.getEmail()))) {
         boolean userExists = userRepository.existsByUsernameOrEmail(salonUser.getUsername(), salonUser.getEmail());
+        if (authorityRepository.count() == 0) {
+            initialize();
+        }
         if (!userExists) {
-            if (authorityRepository.count() == 0) {
-                authorityRepository.save(new Authority("ROLE_ADMIN"));
-                authorityRepository.save(new Authority("ROLE_USER"));
-                salonUser.setAuthorities(authorityRepository.getAuthorityByName("ROLE_ADMIN"));
-            }
             salonUser.setAuthorities(authorityRepository.getAuthorityByName("ROLE_USER"));
             salonUser.setPassword(passwordEncoder.encode(salonUser.getPassword()));
             return userRepository.save(salonUser);
-        } else throw new RuntimeException("Such user already exists");
+        } else throw new
+
+                RuntimeException("Such user already exists");
+    }
+
+    public void initialize() {
+        authorityRepository.save(new Authority("ROLE_ADMIN"));
+        authorityRepository.save(new Authority("ROLE_USER"));
+        SalonUser admin = new SalonUser();
+        admin.setAuthorities(authorityRepository.getAuthorityByName("ROLE_ADMIN"));
+        admin.setUsername("admin");
+        admin.setPassword(passwordEncoder.encode("admin"));
+        admin.setContact("set contact");
+        admin.setEmail("set email");
+        userRepository.save(admin);
     }
 
     public SalonUser updateUserToken(SalonUser salonUser) {

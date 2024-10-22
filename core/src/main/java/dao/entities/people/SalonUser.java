@@ -18,7 +18,7 @@ import java.util.List;
 @Table(name = "users")
 @EqualsAndHashCode(callSuper = true)
 @RequiredArgsConstructor
-@NoArgsConstructor(force = true)
+//@NoArgsConstructor(force = true)
 public class SalonUser extends SomeOne implements UserDetails {
 
     //   @NotEmpty
@@ -30,7 +30,7 @@ public class SalonUser extends SomeOne implements UserDetails {
     private String password;
     //   @Email
     @Column(name = "email")
-    private final String email;
+    private String email;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "user_to_authorities",
