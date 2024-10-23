@@ -40,13 +40,14 @@ export class AuthService {
       this.http.post("/api" + "/users/logout", accessToken).subscribe({
         next: () => {
           sessionStorage.removeItem('accessToken');
-          this.router.navigate(['/login']);
+          // this.router.navigate(['/login']);
         },
         error: err => console.error('Logout failed', err)
       });
-    } else {
-      this.router.navigate(['/login']);
     }
+    // else {
+    // }
+      this.router.navigate(['/login']);
   }
 
   isLoggedIn(): boolean {
