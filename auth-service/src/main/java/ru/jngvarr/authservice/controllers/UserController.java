@@ -2,6 +2,7 @@ package ru.jngvarr.authservice.controllers;
 
 import dao.entities.RefreshToken;
 import dao.entities.people.SalonUser;
+import exceptions.InvalidRefreshTokenException;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -89,26 +90,28 @@ public class UserController {
         return new AuthenticationResponse(accessToken, refreshToken);
     }
 
+    @ResponseStatus
     @PostMapping("/refresh")
-    public AuthenticationResponse refreshAuthenticationToken(HttpServletRequest request) {
-        String refreshToken = refreshTokenService.extractTokenFromCookie(request);
-        Claims claims = jwtUtil.extractAllClaims(refreshToken);
+    public AuthenticationResponse refreshAuthenticationToken(String refreshToken) {
+//        String refreshToken = refreshTokenService.extractTokenFromCookie(request);
+//        Claims claims = jwtUtil.extractAllClaims(refreshToken);
         if (refreshToken == null || refreshToken.isEmpty()) {
-            throw new RuntimeException("Refresh token is missing");
+            throw new InvalidRefreshTokenException("Refresh token is missing");
+            // Ищем токен в базе данных
         }
-        // Ищем токен в базе данных //TODO доделать реализацию
         RefreshToken refreshTokenEntity = refreshTokenService.findByToken(refreshToken);
-        if (refreshTokenEntity == null || refreshTokenEntity.getExpiryDate().isBefore(LocalDateTime.now())) {
-            throw new RuntimeException("Invalid or expired refresh token");
+//        if (refreshTokenEntity == null || refreshTokenEntity.getExpiryDate().isBefore(LocalDateTime.now())) {
+        if (refreshTokenEntity == null || refreshTokenEntity.getRevoked().equals("false")) {
+            throw new InvalidRefreshTokenException("Invalid or revoked refresh token");
         }
-
+        Claims claims = jwtUtil.extractAllClaims(refreshTokenEntity.getToken());
         if (refreshTokenService.validateRefreshToken(claims)) {
             String username = jwtUtil.extractUsername(claims);
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-            String newAccessToken = jwtUtil.generateToken(userDetails, true);
+            UserDetails refreshedUser = userDetailsService.loadUserByUsername(username);
+            String newAccessToken = jwtUtil.generateToken(refreshedUser, true);
             return new AuthenticationResponse(newAccessToken, null);
         } else {
-            throw new RuntimeException("Invalid refresh token");
+            throw new InvalidRefreshTokenException("Invalid refresh token");
         }
     }
 

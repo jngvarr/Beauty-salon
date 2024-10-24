@@ -19,4 +19,7 @@ public class RefreshToken {
 
     @Column(nullable = false, name = "valid_thru")
     private LocalDateTime expiryDate;
+
+    @Column(nullable = false, name = "revoked")
+    private String revoked;
 }

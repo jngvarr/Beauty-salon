@@ -75,7 +75,8 @@ create table if not exists tokens
 (
     id         bigint generated always as identity primary key,
     token      TEXT      NOT NULL,
-    valid_thru TIMESTAMP NOT NULL
+    valid_thru TIMESTAMP NOT NULL,
+    revoked    text default false
 );
 
 

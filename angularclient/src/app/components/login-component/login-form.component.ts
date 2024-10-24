@@ -35,10 +35,10 @@ export class LoginFormComponent {
       username: this.user.username,
       password: this.user.password
     }).pipe(
-      map((res: any) => {
+      map((response: any) => {
         this.loading = false;
-        if (res && res.accessToken) {
-          return res.accessToken;
+        if (response && response.accessToken) {
+          return response.accessToken;
         } else {
           console.error("No access token found in response");
           return null;

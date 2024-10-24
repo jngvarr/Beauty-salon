@@ -40,7 +40,6 @@ public class UserService {
             salonUser.setPassword(passwordEncoder.encode(salonUser.getPassword()));
             return userRepository.save(salonUser);
         } else throw new
-
                 RuntimeException("Such user already exists");
     }
 
