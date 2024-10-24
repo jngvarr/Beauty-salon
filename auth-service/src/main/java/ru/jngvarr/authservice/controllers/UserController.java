@@ -16,6 +16,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import ru.jngvarr.authservice.dto.AuthenticationRequest;
 import ru.jngvarr.authservice.dto.AuthenticationResponse;
+import ru.jngvarr.authservice.dto.RefreshTokenResponse;
+import ru.jngvarr.authservice.dto.TokenRequest;
 import ru.jngvarr.authservice.services.AuthService;
 import ru.jngvarr.authservice.services.RefreshTokenService;
 import ru.jngvarr.authservice.services.UserService;
@@ -90,18 +92,15 @@ public class UserController {
         return new AuthenticationResponse(accessToken, refreshToken);
     }
 
-    @ResponseStatus
     @PostMapping("/refresh")
-    public AuthenticationResponse refreshAuthenticationToken(String refreshToken) {
-//        String refreshToken = refreshTokenService.extractTokenFromCookie(request);
-//        Claims claims = jwtUtil.extractAllClaims(refreshToken);
+    public RefreshTokenResponse refreshAuthenticationToken(@RequestBody TokenRequest request) {
+        String refreshToken = request.getRefreshToken();
         if (refreshToken == null || refreshToken.isEmpty()) {
             throw new InvalidRefreshTokenException("Refresh token is missing");
             // Ищем токен в базе данных
         }
         RefreshToken refreshTokenEntity = refreshTokenService.findByToken(refreshToken);
-//        if (refreshTokenEntity == null || refreshTokenEntity.getExpiryDate().isBefore(LocalDateTime.now())) {
-        if (refreshTokenEntity == null || refreshTokenEntity.getRevoked().equals("false")) {
+        if (refreshTokenEntity == null || refreshTokenEntity.isRevoked()) {
             throw new InvalidRefreshTokenException("Invalid or revoked refresh token");
         }
         Claims claims = jwtUtil.extractAllClaims(refreshTokenEntity.getToken());
@@ -109,7 +108,7 @@ public class UserController {
             String username = jwtUtil.extractUsername(claims);
             UserDetails refreshedUser = userDetailsService.loadUserByUsername(username);
             String newAccessToken = jwtUtil.generateToken(refreshedUser, true);
-            return new AuthenticationResponse(newAccessToken, null);
+            return new RefreshTokenResponse(newAccessToken);
         } else {
             throw new InvalidRefreshTokenException("Invalid refresh token");
         }
@@ -120,14 +119,6 @@ public class UserController {
     public void logout(@RequestBody String request) {
         String username = jwtUtil.extractUsername(jwtUtil.extractAllClaims(request));
         userService.logoutByUsername(username);
-//        public void logout (HttpServletRequest request){
-//            String authHeader = request.getHeader("Authorization");
-//            if (authHeader != null && authHeader.startsWith("Bearer ")) {
-//                String token = StringUtils.trimToNull(authHeader.substring(7));
-//                String username = jwtUtil.extractUsername(jwtUtil.extractAllClaims(token));
-//                userService.logoutByUsername(username);
-//            } else throw new RuntimeException("Wrong request");
-//        }
     }
 
     public SalonUser setUserAuthority(Long id) {

@@ -1,9 +1,10 @@
 package ru.jngvarr.authservice.dto;
 
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 @Data
-public class AuthenticationResponse {
+@RequiredArgsConstructor
+public class RefreshTokenResponse {
     private final String accessToken;
-    private final String refreshToken;
 }

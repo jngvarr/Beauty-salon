@@ -22,9 +22,12 @@ export class AuthService {
     return this.http.post<salonUser>(this.apiService.apiUrl + "/users/registration", user);
   }
 
-  login(username: string | undefined, accessToken: string) {
-    if (typeof sessionStorage !== 'undefined') {
-      sessionStorage.setItem('accessToken', accessToken);
+  login(username: string | undefined, accessToken: string, refreshToken: string) {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('refreshToken', refreshToken);
+      // console.log(accessToken);
+      // console.log(refreshToken);
     } else {
       alert("Authentication failed. Please check your username and password.");
     }
@@ -34,14 +37,13 @@ export class AuthService {
   }
 
   logout() {
-    const accessToken = sessionStorage.getItem('accessToken');
+    const accessToken = localStorage.getItem('accessToken');
     if (accessToken) {
       this.logged = false;
-      console.log(accessToken);
-      // this.http.post(this.apiService + "/users/logout", token).subscribe({
+      // console.log(accessToken);
       this.http.post("/api" + "/users/logout", accessToken).subscribe({
         next: () => {
-          sessionStorage.removeItem('accessToken');
+          localStorage.removeItem('accessToken');
           // this.router.navigate(['/login']);
         },
         error: err => console.error('Logout failed', err)
@@ -60,8 +62,8 @@ export class AuthService {
     return this.username;
   }
 
-  refreshToken() {
-    const refreshToken = localStorage.getItem('refresh_token');
+  refreshTokens() {
+    const refreshToken = localStorage.getItem('refreshToken');
 
     if (!refreshToken) {
       console.error('No refresh token available');
@@ -74,7 +76,7 @@ export class AuthService {
       map((res: any) => {
         if (res && res.accessToken) {
           // Обновляем access-токен в localStorage
-          localStorage.setItem('access_token', res.accessToken);
+          localStorage.setItem('accessToken', res.accessToken);
           return res.accessToken;
         } else {
           console.error("No access token found in response");

@@ -24,8 +24,8 @@ export class LoginFormComponent {
   }
 
   ngOnInit() {
-    if (sessionStorage.getItem('accessToken')) {
-      sessionStorage.setItem('accessToken', '');
+    if (localStorage.getItem('accessToken')) {
+      localStorage.setItem('accessToken', '');
     }
   }
 
@@ -35,12 +35,15 @@ export class LoginFormComponent {
       username: this.user.username,
       password: this.user.password
     }).pipe(
-      map((response: any) => {
+      map((res: any) => {
         this.loading = false;
-        if (response && response.accessToken) {
-          return response.accessToken;
+        if (res && res.accessToken && res.refreshToken) {
+          return {
+            accessToken: res.accessToken,
+            refreshToken: res.refreshToken
+          };
         } else {
-          console.error("No access token found in response");
+          console.error("No access or refresh token found in response");
           return null;
         }
       }),
@@ -49,10 +52,11 @@ export class LoginFormComponent {
         console.error('Login failed', error);
         return of(null);
       })
-    ).subscribe(accessToken => {
-      if (accessToken) {
+    ).subscribe(tokens => {
+      if (tokens) {
+        const { accessToken, refreshToken } = tokens;
         if (this.user.username) {
-          this.authService.login(this.user.username, accessToken);
+          this.authService.login(this.user.username, accessToken, refreshToken);
         } else {
           console.error("Username is undefined");
         }
